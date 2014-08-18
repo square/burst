@@ -2,6 +2,9 @@ package com.squareup.instrumentation;
 
 import android.app.Instrumentation;
 import android.test.AndroidTestRunner;
+import com.squareup.ShowTabletUi;
+import com.squareup.instrumentation.constraints.PhoneOnly;
+import com.squareup.instrumentation.constraints.TabletOnly;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import junit.framework.Test;
@@ -53,10 +56,18 @@ public class ExplodingTestRunner extends AndroidTestRunner {
       if (test instanceof TestCase) {
         TestCase testCase = (TestCase) test;
         Method method = testCaseClass.getMethod(testCase.getName());
-        result.addTest(maybeExplodeTest(testCaseClass, method));
+        if (!shouldSkipMethod(method)) {
+          result.addTest(maybeExplodeTest(testCaseClass, method));
+        }
       } else {
         explodeSuite((TestSuite) test, result); // Recursively explode this suite's tests.
       }
     }
+  }
+
+  private boolean shouldSkipMethod(Method method) {
+    boolean tablet = instrumentation.getTargetContext().getResources().getBoolean(ShowTabletUi.ID);
+    return method.isAnnotationPresent(PhoneOnly.class) && tablet
+        || method.isAnnotationPresent(TabletOnly.class) && !tablet;
   }
 }
