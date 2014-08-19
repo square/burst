@@ -11,7 +11,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import static com.squareup.instrumentation.TestSuiteUtils.maybeExplodeTest;
+import static com.squareup.instrumentation.TestSuiteUtils.explodeTest;
 
 /**
  * Our own test runner which explodes tests annotated with @Variations.
@@ -58,7 +58,7 @@ public class ExplodingTestRunner extends AndroidTestRunner {
         TestCase testCase = (TestCase) test;
         Method method = testCaseClass.getMethod(testCase.getName());
         if (!shouldSkipMethod(method, isTablet)) {
-          result.addTest(maybeExplodeTest(testCaseClass, method, isTablet));
+          result.addTest(explodeTest(testCaseClass, method, isTablet));
         }
       } else {
         explodeSuite((TestSuite) test, result); // Recursively explode this suite's tests.

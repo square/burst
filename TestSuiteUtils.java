@@ -7,7 +7,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import junit.framework.Test;
@@ -26,34 +28,26 @@ public class TestSuiteUtils {
    * Explodes a given test method if it is annotated with @Variations, in which case it will be
    * replaced by multiple methods, each using a different combination of values.
    */
-  public static Test maybeExplodeTest(Class<?> testCaseClass, Method method, boolean isTablet) {
+  public static Test explodeTest(Class<?> testCaseClass, Method method, boolean isTablet) {
+    List<Class<? extends VariationValueProvider<?>>> variations;
     if (method.isAnnotationPresent(Variations.class)) {
-      Variations variations = method.getAnnotation(Variations.class);
-      return explodeTest(testCaseClass, method, variations, isTablet);
+      variations = Arrays.asList(method.getAnnotation(Variations.class).value());
     } else {
-      RegisterInstrumentationTestCase test =
-          (RegisterInstrumentationTestCase) TestSuite.createTest(testCaseClass, method.getName());
-      test.setOriginalName(method.getName());
-      return test;
+      variations = Collections.emptyList();
     }
-  }
 
-  /**
-   * Explodes a test method into multiple methods, each using a different combination of values.
-   */
-  private static TestSuite explodeTest(Class<?> testClass, Method method, Variations variations,
-      boolean isTablet) {
     try {
-      return tryAddTestCasesWithVariations(testClass, method, variations, isTablet);
+      return tryExplodeTest(testCaseClass, method, variations, isTablet);
     } catch (Exception e) {
       throw new RuntimeException("Error creating tests.", e);
     }
   }
 
-  private static TestSuite tryAddTestCasesWithVariations(Class<?> testClass, Method method,
-      Variations variations, boolean isTablet) throws Exception {
+  private static TestSuite tryExplodeTest(Class<?> testClass, Method method,
+      List<Class<? extends VariationValueProvider<?>>> variations, boolean isTablet)
+      throws Exception {
     Map<Class<?>, Collection<?>> variationResultsByType = new HashMap<>();
-    for (Class<? extends VariationValueProvider<?>> valueProviderType : variations.value()) {
+    for (Class<? extends VariationValueProvider<?>> valueProviderType : variations) {
       VariationValueProvider<?> valueProvider = valueProviderType.newInstance();
       variationResultsByType.put(valueProvider.type(), valueProvider.values());
     }
@@ -83,11 +77,12 @@ public class TestSuiteUtils {
    * with variations.
    */
   private static String getFriendlyTestName(Method method, Map<Class<?>, ?> parameterMap,
-      Variations variations, boolean isTablet) throws Exception {
+      List<Class<? extends VariationValueProvider<?>>> variations, boolean isTablet)
+      throws Exception {
     StringBuilder friendlyNameBuilder = new StringBuilder(method.getName());
     for (Class<?> parameterType : parameterMap.keySet()) {
       Object parameterValue = parameterMap.get(parameterType);
-      for (Class<?> variationType : variations.value()) {
+      for (Class<?> variationType : variations) {
         @SuppressWarnings("unchecked") VariationValueProvider<Object> valueProvider =
             (VariationValueProvider<Object>) variationType.newInstance();
         if (valueProvider.type().equals(parameterType)) {
