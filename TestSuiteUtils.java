@@ -26,10 +26,10 @@ public class TestSuiteUtils {
    * Explodes a given test method if it is annotated with @Variations, in which case it will be
    * replaced by multiple methods, each using a different combination of values.
    */
-  public static Test maybeExplodeTest(Class<?> testCaseClass, Method method) {
+  public static Test maybeExplodeTest(Class<?> testCaseClass, Method method, boolean isTablet) {
     if (method.isAnnotationPresent(Variations.class)) {
       Variations variations = method.getAnnotation(Variations.class);
-      return explodeTest(testCaseClass, method, variations);
+      return explodeTest(testCaseClass, method, variations, isTablet);
     } else {
       RegisterInstrumentationTestCase test =
           (RegisterInstrumentationTestCase) TestSuite.createTest(testCaseClass, method.getName());
@@ -41,16 +41,17 @@ public class TestSuiteUtils {
   /**
    * Explodes a test method into multiple methods, each using a different combination of values.
    */
-  private static TestSuite explodeTest(Class<?> testClass, Method method, Variations variations) {
+  private static TestSuite explodeTest(Class<?> testClass, Method method, Variations variations,
+      boolean isTablet) {
     try {
-      return tryAddTestCasesWithVariations(testClass, method, variations);
+      return tryAddTestCasesWithVariations(testClass, method, variations, isTablet);
     } catch (Exception e) {
       throw new RuntimeException("Error creating tests.", e);
     }
   }
 
   private static TestSuite tryAddTestCasesWithVariations(Class<?> testClass, Method method,
-      Variations variations) throws Exception {
+      Variations variations, boolean isTablet) throws Exception {
     Map<Class<?>, Collection<?>> variationResultsByType = new HashMap<>();
     for (Class<? extends VariationValueProvider<?>> valueProviderType : variations.value()) {
       VariationValueProvider<?> valueProvider = valueProviderType.newInstance();
@@ -71,7 +72,7 @@ public class TestSuiteUtils {
       RegisterInstrumentationTestCase testCase =
           (RegisterInstrumentationTestCase) constructor.newInstance(constructorArgs);
       testCase.setOriginalName(method.getName());
-      testCase.setName(getFriendlyTestName(method, parameterMap, variations));
+      testCase.setName(getFriendlyTestName(method, parameterMap, variations, isTablet));
       result.addTest(testCase);
     }
     return result;
@@ -82,7 +83,7 @@ public class TestSuiteUtils {
    * with variations.
    */
   private static String getFriendlyTestName(Method method, Map<Class<?>, ?> parameterMap,
-      Variations variations) throws Exception {
+      Variations variations, boolean isTablet) throws Exception {
     StringBuilder friendlyNameBuilder = new StringBuilder(method.getName());
     for (Class<?> parameterType : parameterMap.keySet()) {
       Object parameterValue = parameterMap.get(parameterType);
@@ -95,6 +96,7 @@ public class TestSuiteUtils {
         }
       }
     }
+    friendlyNameBuilder.append('_').append(isTablet ? "Tablet" : "Phone");
     return friendlyNameBuilder.toString();
   }
 

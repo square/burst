@@ -48,6 +48,7 @@ public class ExplodingTestRunner extends AndroidTestRunner {
   }
 
   private void explodeSuite(TestSuite testSuite, TestSuite result) throws Exception {
+    boolean isTablet = instrumentation.getTargetContext().getResources().getBoolean(ShowTabletUi.ID);
     ClassLoader classLoader = instrumentation.getTargetContext().getClassLoader();
     Class<?> testCaseClass = classLoader.loadClass(testSuite.getName());
     Enumeration<Test> testEnumerator = testSuite.tests();
@@ -56,8 +57,8 @@ public class ExplodingTestRunner extends AndroidTestRunner {
       if (test instanceof TestCase) {
         TestCase testCase = (TestCase) test;
         Method method = testCaseClass.getMethod(testCase.getName());
-        if (!shouldSkipMethod(method)) {
-          result.addTest(maybeExplodeTest(testCaseClass, method));
+        if (!shouldSkipMethod(method, isTablet)) {
+          result.addTest(maybeExplodeTest(testCaseClass, method, isTablet));
         }
       } else {
         explodeSuite((TestSuite) test, result); // Recursively explode this suite's tests.
@@ -65,12 +66,11 @@ public class ExplodingTestRunner extends AndroidTestRunner {
     }
   }
 
-  private boolean shouldSkipMethod(Method method) {
+  private boolean shouldSkipMethod(Method method, boolean isTablet) {
     boolean tabletOnly = method.isAnnotationPresent(TabletOnly.class)
         || method.getDeclaringClass().isAnnotationPresent(TabletOnly.class);
     boolean phoneOnly = method.isAnnotationPresent(PhoneOnly.class)
         || method.getDeclaringClass().isAnnotationPresent(PhoneOnly.class);
-    boolean tablet = instrumentation.getTargetContext().getResources().getBoolean(ShowTabletUi.ID);
-    return (phoneOnly && tablet) || (tabletOnly && !tablet);
+    return (phoneOnly && isTablet) || (tabletOnly && !isTablet);
   }
 }
