@@ -66,8 +66,11 @@ public class ExplodingTestRunner extends AndroidTestRunner {
   }
 
   private boolean shouldSkipMethod(Method method) {
+    boolean tabletOnly = method.isAnnotationPresent(TabletOnly.class)
+        || method.getDeclaringClass().isAnnotationPresent(TabletOnly.class);
+    boolean phoneOnly = method.isAnnotationPresent(PhoneOnly.class)
+        || method.getDeclaringClass().isAnnotationPresent(PhoneOnly.class);
     boolean tablet = instrumentation.getTargetContext().getResources().getBoolean(ShowTabletUi.ID);
-    return method.isAnnotationPresent(PhoneOnly.class) && tablet
-        || method.isAnnotationPresent(TabletOnly.class) && !tablet;
+    return (phoneOnly && tablet) || (tabletOnly && !tablet);
   }
 }
