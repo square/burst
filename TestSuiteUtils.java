@@ -28,7 +28,7 @@ public class TestSuiteUtils {
    * Explodes a given test method if it is annotated with @Variations, in which case it will be
    * replaced by multiple methods, each using a different combination of values.
    */
-  public static Test explodeTest(Class<?> testCaseClass, Method method, boolean isTablet) {
+  public static Test explodeTest(Class<?> testCaseClass, Method method) {
     List<Class<? extends VariationValueProvider<?>>> variations;
     if (method.isAnnotationPresent(Variations.class)) {
       variations = Arrays.asList(method.getAnnotation(Variations.class).value());
@@ -37,14 +37,14 @@ public class TestSuiteUtils {
     }
 
     try {
-      return tryExplodeTest(testCaseClass, method, variations, isTablet);
+      return tryExplodeTest(testCaseClass, method, variations);
     } catch (Exception e) {
       throw new RuntimeException("Error creating tests.", e);
     }
   }
 
   private static TestSuite tryExplodeTest(Class<?> testClass, Method method,
-      List<Class<? extends VariationValueProvider<?>>> variations, boolean isTablet)
+      List<Class<? extends VariationValueProvider<?>>> variations)
       throws Exception {
     Map<Class<?>, Collection<?>> variationResultsByType = new HashMap<>();
     for (Class<? extends VariationValueProvider<?>> valueProviderType : variations) {
@@ -66,7 +66,7 @@ public class TestSuiteUtils {
       RegisterInstrumentationTestCase testCase =
           (RegisterInstrumentationTestCase) constructor.newInstance(constructorArgs);
       testCase.setOriginalName(method.getName());
-      testCase.setName(getFriendlyTestName(method, parameterMap, variations, isTablet));
+      testCase.setName(getFriendlyTestName(method, parameterMap, variations));
       result.addTest(testCase);
     }
     return result;
@@ -77,7 +77,7 @@ public class TestSuiteUtils {
    * with variations.
    */
   private static String getFriendlyTestName(Method method, Map<Class<?>, ?> parameterMap,
-      List<Class<? extends VariationValueProvider<?>>> variations, boolean isTablet)
+      List<Class<? extends VariationValueProvider<?>>> variations)
       throws Exception {
     StringBuilder friendlyNameBuilder = new StringBuilder(method.getName());
     for (Class<?> parameterType : parameterMap.keySet()) {
@@ -91,7 +91,6 @@ public class TestSuiteUtils {
         }
       }
     }
-    friendlyNameBuilder.append('_').append(isTablet ? "Tablet" : "Phone");
     return friendlyNameBuilder.toString();
   }
 
