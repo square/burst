@@ -2,11 +2,12 @@
 package com.squareup.burst;
 
 import java.lang.annotation.Retention;
-import javax.inject.Qualifier;
+import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Retention(RUNTIME) @Qualifier
+@Retention(RUNTIME) @Target(METHOD)
 public @interface Variations {
 
   Class<? extends VariationValueProvider<?>>[] value();
