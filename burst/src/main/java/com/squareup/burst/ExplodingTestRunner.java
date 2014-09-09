@@ -46,7 +46,6 @@ public class ExplodingTestRunner extends AndroidTestRunner {
   }
 
   private void explodeSuite(TestSuite testSuite, TestSuite result) throws Exception {
-    boolean isTablet = instrumentation.getTargetContext().getResources().getBoolean(ShowTabletUi.ID);
     ClassLoader classLoader = instrumentation.getTargetContext().getClassLoader();
     Class<?> testCaseClass = classLoader.loadClass(testSuite.getName());
     Enumeration<Test> testEnumerator = testSuite.tests();
@@ -55,7 +54,7 @@ public class ExplodingTestRunner extends AndroidTestRunner {
       if (test instanceof TestCase) {
         TestCase testCase = (TestCase) test;
         Method method = testCaseClass.getMethod(testCase.getName());
-        result.addTest(explodeTest(testCaseClass, method, isTablet));
+        result.addTest(explodeTest(testCaseClass, method));
       } else {
         explodeSuite((TestSuite) test, result); // Recursively explode this suite's tests.
       }
