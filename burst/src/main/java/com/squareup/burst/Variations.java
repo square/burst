@@ -1,5 +1,5 @@
 // Copyright 2014 Square, Inc.
-package com.squareup.instrumentation.variations;
+package com.squareup.burst;
 
 import java.lang.annotation.Retention;
 import javax.inject.Qualifier;

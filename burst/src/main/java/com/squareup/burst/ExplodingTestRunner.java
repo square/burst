@@ -1,4 +1,4 @@
-package com.squareup.instrumentation;
+package com.squareup.burst;
 
 import android.app.Instrumentation;
 import android.test.AndroidTestRunner;
@@ -9,7 +9,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import static com.squareup.instrumentation.TestSuiteUtils.explodeTest;
+import static com.squareup.burst.TestSuiteUtils.explodeTest;
 
 /**
  * Our own test runner which explodes tests annotated with @Variations.

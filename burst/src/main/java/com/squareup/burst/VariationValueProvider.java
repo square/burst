@@ -1,4 +1,4 @@
-package com.squareup.instrumentation.variations;
+package com.squareup.burst;
 
 import java.util.Collection;
 
