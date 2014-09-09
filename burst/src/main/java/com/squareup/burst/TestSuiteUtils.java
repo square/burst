@@ -27,15 +27,15 @@ public class TestSuiteUtils {
    * replaced by multiple methods, each using a different combination of values.
    */
   public static Test explodeTest(Class<?> testCaseClass, Method method) {
-    List<Class<? extends VariationValueProvider<?>>> variations;
-    if (method.isAnnotationPresent(Variations.class)) {
-      variations = Arrays.asList(method.getAnnotation(Variations.class).value());
-    } else {
-      variations = Collections.emptyList();
+    List<Class<? extends VariationValueProvider<?>>> variationsList = Collections.emptyList();
+
+    Variations variations = method.getAnnotation(Variations.class);
+    if (variations != null) {
+      variationsList = Arrays.asList(variations.value());
     }
 
     try {
-      return tryExplodeTest(testCaseClass, method, variations);
+      return tryExplodeTest(testCaseClass, method, variationsList);
     } catch (Exception e) {
       throw new RuntimeException("Error creating tests.", e);
     }
