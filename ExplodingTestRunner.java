@@ -3,8 +3,6 @@ package com.squareup.instrumentation;
 import android.app.Instrumentation;
 import android.test.AndroidTestRunner;
 import com.squareup.ShowTabletUi;
-import com.squareup.instrumentation.constraints.PhoneOnly;
-import com.squareup.instrumentation.constraints.TabletOnly;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import junit.framework.Test;
@@ -57,20 +55,10 @@ public class ExplodingTestRunner extends AndroidTestRunner {
       if (test instanceof TestCase) {
         TestCase testCase = (TestCase) test;
         Method method = testCaseClass.getMethod(testCase.getName());
-        if (!shouldSkipMethod(method, isTablet)) {
-          result.addTest(explodeTest(testCaseClass, method, isTablet));
-        }
+        result.addTest(explodeTest(testCaseClass, method, isTablet));
       } else {
         explodeSuite((TestSuite) test, result); // Recursively explode this suite's tests.
       }
     }
-  }
-
-  private boolean shouldSkipMethod(Method method, boolean isTablet) {
-    boolean tabletOnly = method.isAnnotationPresent(TabletOnly.class)
-        || method.getDeclaringClass().isAnnotationPresent(TabletOnly.class);
-    boolean phoneOnly = method.isAnnotationPresent(PhoneOnly.class)
-        || method.getDeclaringClass().isAnnotationPresent(PhoneOnly.class);
-    return (phoneOnly && isTablet) || (tabletOnly && !isTablet);
   }
 }
