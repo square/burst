@@ -9,15 +9,21 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>burst</artifactId>
-  <name>Burst</name>
+  <artifactId>burst-android</artifactId>
+  <name>Burst Android Integration</name>
 
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
+      <groupId>com.squareup.burst</groupId>
+      <artifactId>burst</artifactId>
+      <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.android</groupId>
+      <artifactId>android-test</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
