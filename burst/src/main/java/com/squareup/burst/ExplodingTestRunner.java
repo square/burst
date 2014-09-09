@@ -2,7 +2,6 @@ package com.squareup.burst;
 
 import android.app.Instrumentation;
 import android.test.AndroidTestRunner;
-import com.squareup.ShowTabletUi;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import junit.framework.Test;
