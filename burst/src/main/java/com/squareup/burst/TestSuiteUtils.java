@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,7 +44,7 @@ public class TestSuiteUtils {
   private static TestSuite tryExplodeTest(Class<?> testClass, Method method,
       List<Class<? extends VariationValueProvider<?>>> variations)
       throws Exception {
-    Map<Class<?>, Collection<?>> variationResultsByType = new HashMap<>();
+    Map<Class<?>, Collection<?>> variationResultsByType = new LinkedHashMap<>();
     for (Class<? extends VariationValueProvider<?>> valueProviderType : variations) {
       VariationValueProvider<?> valueProvider = valueProviderType.newInstance();
       variationResultsByType.put(valueProvider.type(), valueProvider.values());
@@ -98,7 +98,7 @@ public class TestSuiteUtils {
   private static Collection<Map<Class<?>, ?>> getParameterMaps(
       Map<Class<?>, Collection<?>> possibleValuesByType) {
     Collection<Map<Class<?>, ?>> parameterMaps = new ArrayList<>();
-    parameterMaps.add(new HashMap<Class<?>, Object>());
+    parameterMaps.add(new LinkedHashMap<Class<?>, Object>());
 
     for (Class<?> type : possibleValuesByType.keySet()) {
       Collection<?> possibleValues = possibleValuesByType.get(type);
@@ -106,7 +106,7 @@ public class TestSuiteUtils {
       Collection<Map<Class<?>, ?>> expandedParameterMaps = new ArrayList<>();
       for (Map<Class<?>, ?> parameterMap : parameterMaps) {
         for (Object value : possibleValues) {
-          Map<Class<?>, Object> expandedParameterMap = new HashMap<>(parameterMap);
+          Map<Class<?>, Object> expandedParameterMap = new LinkedHashMap<>(parameterMap);
           expandedParameterMap.put(type, value);
           expandedParameterMaps.add(expandedParameterMap);
         }
