@@ -2,7 +2,6 @@ package com.squareup.burst;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,25 +13,25 @@ public class BurstTest {
   enum Second { DINGO, EAGLE }
   enum Third { FRANK, GREAT, HEAVY, ITALY }
 
-  static class None {}
-  static class Empty {
+  public static class None {}
+  public static class Empty {
     public Empty() {}
   }
-  static class NonPublic {
+  public static class NonPublic {
     NonPublic() {}
   }
-  static class Multiple {
+  public static class Multiple {
     public Multiple(First first) {}
     public Multiple(Second second) {}
   }
-  static class One {
+  public static class One {
     public One(First first) {}
   }
-  static class Three {
+  public static class Three {
     public Three(First first, Second second, Third third) {}
   }
 
-  static class Bad {
+  public static class Bad {
     public Bad(Object o) {}
   }
 
@@ -42,7 +41,6 @@ public class BurstTest {
     assertThat(constructor.getParameterTypes()).isEmpty();
   }
 
-  @Ignore // I don't think we can enforce this.
   @Test public void nonPublicConstructor() {
     try {
       Burst.findConstructor(NonPublic.class);

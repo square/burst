@@ -20,17 +20,6 @@ public final class Burst {
     if (constructors.length == 1) {
       return constructors[0];
     }
-    if (constructors.length == 0) {
-      // There are no public constructors. Check for a default constructor.
-      constructors = cls.getDeclaredConstructors();
-      if (constructors.length == 1) {
-        Constructor<?> constructor = constructors[0];
-        if (constructor.getParameterCount() == 0) {
-          constructor.setAccessible(true);
-          return constructor;
-        }
-      }
-    }
     throw new IllegalStateException(cls.getName() + " requires a single public constructor.");
   }
 
