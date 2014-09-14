@@ -221,20 +221,20 @@ public class BurstTest {
   @Test public void singleConstructorArgumentName() {
     String name = "helloWorld";
     String actual = Burst.explodedName(name, new Object[] { First.APPLE }, new Object[0]);
-    assertThat(actual).isEqualTo("helloWorld_FirstAPPLE");
+    assertThat(actual).isEqualTo("helloWorld_First.APPLE");
   }
 
   @Test public void singleMethodArgumentName() {
     String name = "helloWorld";
     String actual = Burst.explodedName(name, new Object[0], new Object[] { First.APPLE });
-    assertThat(actual).isEqualTo("helloWorld_FirstAPPLE");
+    assertThat(actual).isEqualTo("helloWorld_First.APPLE");
   }
 
   @Test public void singleConstructorAndMethodArgumentName() {
     String name = "helloWorld";
     String actual =
         Burst.explodedName(name, new Object[] { First.APPLE }, new Object[] { First.BEARD });
-    assertThat(actual).isEqualTo("helloWorld_FirstAPPLE_FirstBEARD");
+    assertThat(actual).isEqualTo("helloWorld_First.APPLE_First.BEARD");
   }
 
   @Test public void multipleConstructorArgumentsName() {
@@ -242,14 +242,14 @@ public class BurstTest {
     String actual =
         Burst.explodedName(name, new Object[] { First.APPLE, Second.DINGO, Third.FRANK },
             new Object[0]);
-    assertThat(actual).isEqualTo("helloWorld_FirstAPPLE_SecondDINGO_ThirdFRANK");
+    assertThat(actual).isEqualTo("helloWorld_First.APPLE_Second.DINGO_Third.FRANK");
   }
 
   @Test public void multipleMethodArgumentsName() {
     String name = "helloWorld";
     String actual = Burst.explodedName(name, new Object[0],
         new Object[] { First.APPLE, Second.DINGO, Third.FRANK });
-    assertThat(actual).isEqualTo("helloWorld_FirstAPPLE_SecondDINGO_ThirdFRANK");
+    assertThat(actual).isEqualTo("helloWorld_First.APPLE_Second.DINGO_Third.FRANK");
   }
 
   @Test public void multipleConstructorAndMethodArgumentsName() {
@@ -258,6 +258,6 @@ public class BurstTest {
         Burst.explodedName(name, new Object[] { First.APPLE, Second.DINGO, Third.FRANK },
             new Object[] { First.BEARD, Second.EAGLE, Third.GREAT });
     assertThat(actual).isEqualTo(
-        "helloWorld_FirstAPPLE_SecondDINGO_ThirdFRANK_FirstBEARD_SecondEAGLE_ThirdGREAT");
+        "helloWorld_First.APPLE_Second.DINGO_Third.FRANK_First.BEARD_Second.EAGLE_Third.GREAT");
   }
 }
