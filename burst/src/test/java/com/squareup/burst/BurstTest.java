@@ -192,9 +192,9 @@ public class BurstTest {
     );
   }
 
-  @Test public void nonEnumConstructorArgumentNameFails() {
+  @Test public void nonEnumArgumentsFail() {
     try {
-      Burst.explodedName("nope", new Object[] { "NOPE" }, new Object[] { First.APPLE });
+      Burst.friendlyName(new Object[] { "NOPE" });
       fail();
     } catch (ClassCastException e) {
       // TODO is this message an implementation detail of Java?
@@ -202,62 +202,18 @@ public class BurstTest {
     }
   }
 
-  @Test public void nonEnumMethodArgumentNameFails() {
-    try {
-      Burst.explodedName("nope", new Object[] { First.APPLE }, new Object[] { "NOPE" });
-      fail();
-    } catch (ClassCastException e) {
-      // TODO is this message an implementation detail of Java?
-      assertThat(e).hasMessage("java.lang.String cannot be cast to java.lang.Enum");
-    }
+  @Test public void noArguments() {
+    String actual = Burst.friendlyName(new Object[0]);
+    assertThat(actual).isEqualTo("");
   }
 
-  @Test public void noArgumentsName() {
-    String name = "helloWorld";
-    String actual = Burst.explodedName(name, new Object[0], new Object[0]);
-    assertThat(actual).isEqualTo("helloWorld");
+  @Test public void singleArgument() {
+    String actual = Burst.friendlyName(new Object[] { First.APPLE });
+    assertThat(actual).isEqualTo("First.APPLE");
   }
 
-  @Test public void singleConstructorArgumentName() {
-    String name = "helloWorld";
-    String actual = Burst.explodedName(name, new Object[] { First.APPLE }, new Object[0]);
-    assertThat(actual).isEqualTo("helloWorld_First.APPLE");
-  }
-
-  @Test public void singleMethodArgumentName() {
-    String name = "helloWorld";
-    String actual = Burst.explodedName(name, new Object[0], new Object[] { First.APPLE });
-    assertThat(actual).isEqualTo("helloWorld_First.APPLE");
-  }
-
-  @Test public void singleConstructorAndMethodArgumentName() {
-    String name = "helloWorld";
-    String actual =
-        Burst.explodedName(name, new Object[] { First.APPLE }, new Object[] { First.BEARD });
-    assertThat(actual).isEqualTo("helloWorld_First.APPLE_First.BEARD");
-  }
-
-  @Test public void multipleConstructorArgumentsName() {
-    String name = "helloWorld";
-    String actual =
-        Burst.explodedName(name, new Object[] { First.APPLE, Second.DINGO, Third.FRANK },
-            new Object[0]);
-    assertThat(actual).isEqualTo("helloWorld_First.APPLE_Second.DINGO_Third.FRANK");
-  }
-
-  @Test public void multipleMethodArgumentsName() {
-    String name = "helloWorld";
-    String actual = Burst.explodedName(name, new Object[0],
-        new Object[] { First.APPLE, Second.DINGO, Third.FRANK });
-    assertThat(actual).isEqualTo("helloWorld_First.APPLE_Second.DINGO_Third.FRANK");
-  }
-
-  @Test public void multipleConstructorAndMethodArgumentsName() {
-    String name = "helloWorld";
-    String actual =
-        Burst.explodedName(name, new Object[] { First.APPLE, Second.DINGO, Third.FRANK },
-            new Object[] { First.BEARD, Second.EAGLE, Third.GREAT });
-    assertThat(actual).isEqualTo(
-        "helloWorld_First.APPLE_Second.DINGO_Third.FRANK_First.BEARD_Second.EAGLE_Third.GREAT");
+  @Test public void multipleArguments() {
+    String actual = Burst.friendlyName(new Object[] { First.APPLE, Second.EAGLE, Third.ITALY });
+    assertThat(actual).isEqualTo("First.APPLE, Second.EAGLE, Third.ITALY");
   }
 }
