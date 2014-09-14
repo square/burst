@@ -43,26 +43,29 @@ public class BurstAndroid extends AndroidTestRunner {
 
     ClassLoader classLoader = instrumentation.getTargetContext().getClassLoader();
     Class<?> testClass = classLoader.loadClass(testSuite.getName());
-    Constructor<?> constructor = Burst.findConstructor(testClass);
 
-    for (Object[] constructorArgs : Burst.explodeArguments(constructor)) {
-      @SuppressWarnings("unchecked") Enumeration<Test> testEnumerator = testSuite.tests();
-      while (testEnumerator.hasMoreElements()) {
-        Test test = testEnumerator.nextElement();
-        if (test instanceof TestCase) {
-          TestCase testCase = (TestCase) test;
-          Method method = testClass.getMethod(testCase.getName());
-          for (Object[] methodArgs : Burst.explodeArguments(method)) {
+    Constructor<?> constructor = Burst.findConstructor(testClass);
+    Object[][] constructorArgsList = Burst.explodeArguments(constructor);
+
+    @SuppressWarnings("unchecked") Enumeration<Test> testEnumerator = testSuite.tests();
+    while (testEnumerator.hasMoreElements()) {
+      Test test = testEnumerator.nextElement();
+      if (test instanceof TestCase) {
+        TestCase testCase = (TestCase) test;
+        Method method = testClass.getMethod(testCase.getName());
+        for (Object[] methodArgs : Burst.explodeArguments(method)) {
+          // Loop constructor args last so we only iterate and explode each test method once.
+          for (Object[] constructorArgs : constructorArgsList) {
             String name = Burst.explodedName(method.getName(), constructorArgs, methodArgs);
             result.addTest(
                 new BurstTestCase(name, constructor, constructorArgs, method, methodArgs));
           }
-        } else if (test instanceof TestSuite) {
-          explodeSuite((TestSuite) test, result); // Recursively explode this suite's tests.
-        } else {
-          throw new IllegalStateException(
-              "Unknown Test type. Not TestCase or TestSuite. " + test.getClass().getName());
         }
+      } else if (test instanceof TestSuite) {
+        explodeSuite((TestSuite) test, result); // Recursively explode this suite's tests.
+      } else {
+        throw new IllegalStateException(
+            "Unknown Test type. Not TestCase or TestSuite. " + test.getClass().getName());
       }
     }
   }
