@@ -37,7 +37,7 @@ public class BurstAndroid extends AndroidTestRunner {
           TestCase testCase = (TestCase) test;
           Method method = testClass.getMethod(testCase.getName());
           for (Object[] methodArgs : Burst.explodeArguments(method)) {
-            String name = Burst.explodedName(method.getName(), methodArgs);
+            String name = Burst.explodedName(method.getName(), constructorArgs, methodArgs);
             result.addTest(
                 new BurstTestCase(name, constructor, constructorArgs, method, methodArgs));
           }

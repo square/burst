@@ -46,20 +46,31 @@ public final class Burst {
   }
 
   /**
-   * Creates an "exploded" test name which includes information about the {@code arguments}. This
-   * will append both the enum class and enum value name for every argument in order.
+   * Creates an "exploded" test name which includes information about the {@code constructorArgs}
+   * and {@code methodArgs}. This will append both the enum class and enum value name for every
+   * argument in order.
    * <p>
-   * For example, a method named "snackBreak" being invoked with arguments {@code Drink.SODA} and
-   * {@code Snack.ALMONDS} would produce "snackBreak_DrinkSODA_SnackALMONDS".
+   * For example, a method named "snackBreak" being invoked with constructor arguments
+   * {@code Drink.SODA} and {@code Snack.ALMONDS} and method arguments {@code BreakTime.AFTERNOON}
+   * would produce "snackBreak_DrinkSODA_SnackALMONDS_BreakTimeAFTERNOON".
    *
-   * @throws ClassCastException If any element of {@code arguments} is not an enum value.
+   * @throws ClassCastException If any element of {@code constructorArgs} or {@code methodArgs} is
+   * not an enum value.
    */
-  public static String explodedName(String name, Object[] arguments) {
+  public static String explodedName(String name, Object[] constructorArgs, Object[] methodArgs) {
     checkNotNull(name, "name");
-    checkNotNull(arguments, "arguments");
+    checkNotNull(constructorArgs, "constructorArgs");
+    checkNotNull(methodArgs, "methodArgs");
 
     StringBuilder builder = new StringBuilder(name);
-    for (Object argument : arguments) {
+    for (Object argument : constructorArgs) {
+      Enum<?> value = (Enum<?>) argument;
+      // Appends the enum name and value name. (e.g., CardVISA)
+      builder.append('_') //
+          .append(value.getClass().getSimpleName()) //
+          .append(value.name());
+    }
+    for (Object argument : methodArgs) {
       Enum<?> value = (Enum<?>) argument;
       // Appends the enum name and value name. (e.g., CardVISA)
       builder.append('_') //
