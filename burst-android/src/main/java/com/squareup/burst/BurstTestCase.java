@@ -34,4 +34,8 @@ final class BurstTestCase extends TestCase {
       throw e;
     }
   }
+
+  @Override public String toString() {
+    return getName() + '(' + constructor.getDeclaringClass().getName() + ')';
+  }
 }
