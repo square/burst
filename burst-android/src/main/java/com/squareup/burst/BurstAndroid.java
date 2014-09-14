@@ -1,5 +1,6 @@
 package com.squareup.burst;
 
+import android.app.Instrumentation;
 import android.test.AndroidTestRunner;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -9,6 +10,18 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 public class BurstAndroid extends AndroidTestRunner {
+  private Instrumentation instrumentation;
+
+  @Override public void setInstrumentation(Instrumentation instrumentation) {
+    super.setInstrumentation(instrumentation);
+    this.instrumentation = instrumentation;
+  }
+
+  @Override public void setInstrumentaiton(Instrumentation instrumentation) {
+    super.setInstrumentaiton(instrumentation);
+    this.instrumentation = instrumentation;
+  }
+
   @Override public void setTest(Test test) {
     if (!(test instanceof TestSuite)) {
       throw new IllegalArgumentException("Expected instance of TestSuite.");
@@ -24,8 +37,11 @@ public class BurstAndroid extends AndroidTestRunner {
   }
 
   private void explodeSuite(TestSuite testSuite, TestSuite result) throws Exception {
-    ClassLoader classLoader = testSuite.getClass().getClassLoader();
+    if (instrumentation == null) {
+      throw new IllegalStateException("setInstrumentation not called.");
+    }
 
+    ClassLoader classLoader = instrumentation.getTargetContext().getClassLoader();
     Class<?> testClass = classLoader.loadClass(testSuite.getName());
     Constructor<?> constructor = Burst.findConstructor(testClass);
 
