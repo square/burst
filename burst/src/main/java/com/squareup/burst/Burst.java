@@ -65,19 +65,19 @@ public final class Burst {
     StringBuilder builder = new StringBuilder(name);
     for (Object argument : constructorArgs) {
       Enum<?> value = (Enum<?>) argument;
-      // Appends the enum name and value name. (e.g., CardVISA)
-      builder.append('_') //
-          .append(value.getClass().getSimpleName()) //
-          .append(value.name());
+      // Appends the enum name and value name. (e.g., Card.VISA)
+      builder.append('_').append(getQualifiedEnumName(value));
     }
     for (Object argument : methodArgs) {
       Enum<?> value = (Enum<?>) argument;
-      // Appends the enum name and value name. (e.g., CardVISA)
-      builder.append('_') //
-          .append(value.getClass().getSimpleName()) //
-          .append(value.name());
+      // Appends the enum name and value name. (e.g., Card.VISA)
+      builder.append('_').append(getQualifiedEnumName(value));
     }
     return builder.toString();
+  }
+
+  private static String getQualifiedEnumName(Enum<?> value) {
+    return value.getClass().getSimpleName() + '.' + value;
   }
 
   private static Object[][] explodeParameters(Class<?>[] parameterTypes, String name) {
