@@ -56,7 +56,7 @@ public class BurstAndroid extends AndroidTestRunner {
         for (Object[] methodArgs : Burst.explodeArguments(method)) {
           // Loop constructor args last so we only iterate and explode each test method once.
           for (Object[] constructorArgs : constructorArgsList) {
-            String name = Burst.explodedName(method.getName(), constructorArgs, methodArgs);
+            String name = nameWithArguments(method.getName(), constructorArgs, methodArgs);
             result.addTest(
                 new BurstTestCase(name, constructor, constructorArgs, method, methodArgs));
           }
@@ -68,5 +68,17 @@ public class BurstAndroid extends AndroidTestRunner {
             "Unknown Test type. Not TestCase or TestSuite. " + test.getClass().getName());
       }
     }
+  }
+
+  private static String nameWithArguments(String name, Object[] constructorArgs,
+      Object[] methodArgs) {
+    StringBuilder builder = new StringBuilder(name);
+    if (constructorArgs.length > 0) {
+      builder.append('[').append(Burst.friendlyName(constructorArgs)).append(']');
+    }
+    if (methodArgs.length > 0) {
+      builder.append('[').append(Burst.friendlyName(methodArgs)).append(']');
+    }
+    return builder.toString();
   }
 }

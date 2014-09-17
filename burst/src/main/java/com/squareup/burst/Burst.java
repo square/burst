@@ -57,27 +57,23 @@ public final class Burst {
    * @throws ClassCastException If any element of {@code constructorArgs} or {@code methodArgs} is
    * not an enum value.
    */
-  public static String explodedName(String name, Object[] constructorArgs, Object[] methodArgs) {
-    checkNotNull(name, "name");
-    checkNotNull(constructorArgs, "constructorArgs");
-    checkNotNull(methodArgs, "methodArgs");
-
-    StringBuilder builder = new StringBuilder(name);
-    for (Object argument : constructorArgs) {
-      Enum<?> value = (Enum<?>) argument;
-      // Appends the enum name and value name. (e.g., Card.VISA)
-      builder.append('_').append(getQualifiedEnumName(value));
+  public static String friendlyName(Object[] arguments) {
+    checkNotNull(arguments, "arguments");
+    if (arguments.length == 0) {
+      return "";
     }
-    for (Object argument : methodArgs) {
+
+    StringBuilder builder = new StringBuilder();
+    for (Object argument : arguments) {
+      if (builder.length() > 0) {
+        builder.append(", ");
+      }
+
       Enum<?> value = (Enum<?>) argument;
       // Appends the enum name and value name. (e.g., Card.VISA)
-      builder.append('_').append(getQualifiedEnumName(value));
+      builder.append(value.getClass().getSimpleName()).append('.').append(value);
     }
     return builder.toString();
-  }
-
-  private static String getQualifiedEnumName(Enum<?> value) {
-    return value.getClass().getSimpleName() + '.' + value;
   }
 
   private static Object[][] explodeParameters(Class<?>[] parameterTypes, String name) {
