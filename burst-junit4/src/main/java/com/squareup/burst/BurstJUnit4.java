@@ -11,6 +11,7 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.TestClass;
 
+import static com.squareup.burst.Util.checkNotNull;
 import static java.util.Collections.unmodifiableList;
 
 public final class BurstJUnit4 extends Suite {
@@ -19,6 +20,8 @@ public final class BurstJUnit4 extends Suite {
   }
 
   static List<Runner> explode(Class<?> cls) throws InitializationError {
+    checkNotNull(cls, "cls");
+
     TestClass testClass = new TestClass(cls);
     List<FrameworkMethod> testMethods = testClass.getAnnotatedMethods(Test.class);
 
