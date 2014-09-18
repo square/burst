@@ -1,7 +1,9 @@
 package com.squareup.burst;
 
 import android.app.Instrumentation;
+import android.content.Context;
 import android.test.AndroidTestRunner;
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
@@ -57,8 +59,14 @@ public class BurstAndroid extends AndroidTestRunner {
           // Loop constructor args last so we only iterate and explode each test method once.
           for (Object[] constructorArgs : constructorArgsList) {
             String name = nameWithArguments(method.getName(), constructorArgs, methodArgs);
-            result.addTest(
-                new BurstTestCase(name, constructor, constructorArgs, method, methodArgs));
+            // We can't call setName(name) - that would break TestCase's runTest which reflectively
+            // invokes methods by name. Instead we generate a new class which overrides getName.
+            // runTest won't break because it reads its name field directly, not through getName.
+            File dexCache = instrumentation.getTargetContext().getDir("dx", Context.MODE_PRIVATE);
+            TestCase instrumentedTestCase = TestInstrumenter.instrumentTestCase(testClass,
+                constructor.getParameterTypes(), constructorArgs, name, dexCache);
+            instrumentedTestCase.setName(method.getName());
+            result.addTest(instrumentedTestCase);
           }
         }
       } else if (test instanceof TestSuite) {

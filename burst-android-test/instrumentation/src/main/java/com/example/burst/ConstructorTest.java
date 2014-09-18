@@ -2,7 +2,7 @@ package com.example.burst;
 
 import junit.framework.TestCase;
 
-public final class ConstructorTest extends TestCase {
+public class ConstructorTest extends TestCase {
   private final Drink drink;
 
   public ConstructorTest() {

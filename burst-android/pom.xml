@@ -30,5 +30,10 @@
       <artifactId>android-test</artifactId>
       <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.google.dexmaker</groupId>
+      <artifactId>dexmaker</artifactId>
+    </dependency>
   </dependencies>
 </project>
