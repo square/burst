@@ -7,7 +7,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import junit.framework.TestCase;
 
-public class TestInstrumenter {
+final class TestInstrumenter {
   /**
    * Instruments a test case, overriding {@link TestCase#getName()} to return an arbitrary name.
    * This can be used to embed variation values, or any other information, in the test name that
@@ -41,5 +41,9 @@ public class TestInstrumenter {
     } catch (IOException e) {
       throw new RuntimeException("Instrumentation failed.", e);
     }
+  }
+
+  private TestInstrumenter() {
+    throw new AssertionError("No instances.");
   }
 }
