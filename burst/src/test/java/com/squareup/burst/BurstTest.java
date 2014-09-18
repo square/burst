@@ -13,17 +13,6 @@ public class BurstTest {
   enum Second { DINGO, EAGLE }
   enum Third { FRANK, GREAT, HEAVY, ITALY }
 
-  public static class None {}
-  public static class Empty {
-    public Empty() {}
-  }
-  public static class NonPublic {
-    NonPublic() {}
-  }
-  public static class Multiple {
-    public Multiple(First first) {}
-    public Multiple(Second second) {}
-  }
   public static class One {
     public One(First first) {}
   }
@@ -33,37 +22,6 @@ public class BurstTest {
 
   public static class Bad {
     public Bad(Object o) {}
-  }
-
-  @Test public void noConstructor() {
-    Constructor<?> constructor = Burst.findConstructor(None.class);
-    assertThat(constructor).isNotNull();
-    assertThat(constructor.getParameterTypes()).isEmpty();
-  }
-
-  @Test public void nonPublicConstructor() {
-    try {
-      Burst.findConstructor(NonPublic.class);
-      fail();
-    } catch (IllegalStateException e) {
-      assertThat(e).hasMessage(
-          NonPublic.class.getName() + " requires a single public constructor.");
-    }
-  }
-
-  @Test public void singleConstructor() {
-    Constructor<?> constructor = Burst.findConstructor(One.class);
-    assertThat(constructor).isNotNull();
-    assertThat(constructor.getParameterTypes()).containsExactly(First.class);
-  }
-
-  @Test public void multipleConstructors() {
-    try {
-      Burst.findConstructor(Multiple.class);
-      fail();
-    } catch (IllegalStateException e) {
-      assertThat(e).hasMessage(Multiple.class.getName() + " requires a single public constructor.");
-    }
   }
 
   @Test public void nonEnumConstructorParameter() {

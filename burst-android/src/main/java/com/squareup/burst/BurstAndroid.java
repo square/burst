@@ -73,8 +73,6 @@ public class BurstAndroid extends AndroidTestRunner {
   /**
    * Locates the Burst-compatible constructor honoring JUnit 3's restriction of needing a no-arg
    * constructor.
-   *
-   * @see Burst#findConstructor(Class)
    */
   static Constructor<?> findBurstableConstructor(Class<?> cls) {
     Constructor<?>[] constructors = cls.getConstructors();

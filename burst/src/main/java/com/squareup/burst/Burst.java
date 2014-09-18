@@ -12,17 +12,6 @@ import static com.squareup.burst.Util.checkNotNull;
 public final class Burst {
   private static final Object[][] NONE = new Object[1][0];
 
-  /** Locate the default or public constructor for a test class. */
-  public static Constructor<?> findConstructor(Class<?> cls) {
-    checkNotNull(cls, "cls");
-
-    Constructor<?>[] constructors = cls.getConstructors();
-    if (constructors.length == 1) {
-      return constructors[0];
-    }
-    throw new IllegalStateException(cls.getName() + " requires a single public constructor.");
-  }
-
   /**
    * Explode a list of argument values for invoking the specified constructor with all combinations
    * of its parameters.

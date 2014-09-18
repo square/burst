@@ -33,7 +33,7 @@ public final class BurstJUnit4 extends Suite {
       }
     }
 
-    Constructor<?> constructor = Burst.findConstructor(cls);
+    Constructor<?> constructor = findConstructor(cls);
     Object[][] constructorArgsList = Burst.explodeArguments(constructor);
     List<Runner> burstRunners = new ArrayList<>(constructorArgsList.length);
     for (Object[] constructorArgs : constructorArgsList) {
@@ -41,6 +41,17 @@ public final class BurstJUnit4 extends Suite {
     }
 
     return unmodifiableList(burstRunners);
+  }
+
+  /** Locate the default or public constructor for a test class. */
+  static Constructor<?> findConstructor(Class<?> cls) {
+    checkNotNull(cls, "cls");
+
+    Constructor<?>[] constructors = cls.getConstructors();
+    if (constructors.length == 1) {
+      return constructors[0];
+    }
+    throw new IllegalStateException(cls.getName() + " requires a single public constructor.");
   }
 
   static String nameWithArguments(String name, Object[] arguments) {
