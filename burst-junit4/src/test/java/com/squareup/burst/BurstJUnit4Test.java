@@ -1,12 +1,64 @@
 package com.squareup.burst;
 
+import java.lang.reflect.Constructor;
 import org.junit.Test;
 import org.junit.runners.model.InitializationError;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 public final class BurstJUnit4Test {
   private final JournalingListener listener = new JournalingListener();
+
+  enum First { APPLE, BEARD, COUCH }
+  enum Second { DINGO, EAGLE }
+
+  public static class One {
+    public One(First first) {}
+  }
+
+  public static class None {}
+  public static class Empty {
+    public Empty() {}
+  }
+  public static class NonPublic {
+    NonPublic() {}
+  }
+  public static class Multiple {
+    public Multiple(First first) {}
+    public Multiple(Second second) {}
+  }
+
+  @Test public void noConstructor() {
+    Constructor<?> constructor = BurstJUnit4.findConstructor(None.class);
+    assertThat(constructor).isNotNull();
+    assertThat(constructor.getParameterTypes()).isEmpty();
+  }
+
+  @Test public void nonPublicConstructor() {
+    try {
+      BurstJUnit4.findConstructor(NonPublic.class);
+      fail();
+    } catch (IllegalStateException e) {
+      assertThat(e).hasMessage(
+          NonPublic.class.getName() + " requires a single public constructor.");
+    }
+  }
+
+  @Test public void singleConstructor() {
+    Constructor<?> constructor = BurstJUnit4.findConstructor(One.class);
+    assertThat(constructor).isNotNull();
+    assertThat(constructor.getParameterTypes()).containsExactly(First.class);
+  }
+
+  @Test public void multipleConstructors() {
+    try {
+      BurstJUnit4.findConstructor(Multiple.class);
+      fail();
+    } catch (IllegalStateException e) {
+      assertThat(e).hasMessage(Multiple.class.getName() + " requires a single public constructor.");
+    }
+  }
 
   @Test public void constructorNone() throws InitializationError {
     BurstJUnit4 runner = new BurstJUnit4(ConstructorNoArgumentTest.class);
