@@ -76,8 +76,8 @@ public class BurstAndroid extends AndroidTestRunner {
    *
    * @see Burst#findConstructor(Class)
    */
-  private static Constructor<?> findBurstableConstructor(Class<?> cls) {
-    Constructor<?>[] constructors = cls.getDeclaredConstructors();
+  static Constructor<?> findBurstableConstructor(Class<?> cls) {
+    Constructor<?>[] constructors = cls.getConstructors();
     if (constructors.length > 2) {
       throw new IllegalStateException("Class "
           + cls.getName()
