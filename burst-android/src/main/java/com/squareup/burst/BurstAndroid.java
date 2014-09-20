@@ -25,36 +25,88 @@ public class BurstAndroid extends AndroidTestRunner {
   }
 
   @Override public void setTest(Test test) {
+    if (instrumentation == null) {
+      throw new IllegalStateException("setInstrumentation not called.");
+    }
     if (!(test instanceof TestSuite)) {
       throw new IllegalArgumentException("Expected instance of TestSuite.");
     }
 
-    TestSuite godTestSuite = new TestSuite();
+    TestSuite exploded = new TestSuite();
     try {
-      explodeSuite((TestSuite) test, godTestSuite);
+      explodeSuite((TestSuite) test, exploded);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    super.setTest(godTestSuite);
+    super.setTest(exploded);
   }
 
-  private void explodeSuite(TestSuite testSuite, TestSuite result) throws Exception {
-    if (instrumentation == null) {
-      throw new IllegalStateException("setInstrumentation not called.");
+  /**
+   * Callback for determining whether or not a test class is applicable to run. This can be used
+   * for filtering which classes run based on properties not known directly to the runner.
+   * <p>
+   * For example, certain test classes are only appropriate to run on devices that you consider
+   * a tablet. A {@code @Tablet} annotation can be created and placed on these classes. Subclasses
+   * of this method could then query as to whether the device matched the requirements if the
+   * annotation was present.
+   * <pre>{@code
+   * &#064;Override
+   * public boolean isClassApplicable(Class&lt;?> cls) {
+   *   return cls.getAnnotation(Tablet.class) == null
+   *       || deviceIsConsideredTablet();
+   * }
+   * }</pre>
+   */
+  @SuppressWarnings("UnusedParameters") // Parameters are for subclass usage.
+  public boolean isClassApplicable(Class<?> cls) {
+    return true;
+  }
+
+  /**
+   * Callback for determining whether or not a test method is applicable to run. This can be used
+   * for filtering which methods run based on properties not known directly to the runner.
+   * <p>
+   * For example, certain test methods are only appropriate to run on devices that you consider
+   * a tablet. A {@code @Tablet} annotation can be created and placed on these methods. Subclasses
+   * of this method could then query as to whether the device matched the requirements if the
+   * annotation was present.
+   * <pre>{@code
+   * &#064;Override
+   * public boolean isMethodApplicable(Class&lt;?> cls, Method method) {
+   *   return method.getAnnotation(Tablet.class) == null
+   *       || deviceIsConsideredTablet();
+   * }
+   * }</pre>
+   */
+  @SuppressWarnings("UnusedParameters") // Parameters are for subclass usage.
+  public boolean isMethodApplicable(Class<?> cls, Method method) {
+    return true;
+  }
+
+  private void explodeSuite(TestSuite suite, TestSuite exploded) throws Exception {
+    Class<? extends TestSuite> suiteClass = suite.getClass();
+    if (!isClassApplicable(suiteClass)) {
+      return;
     }
 
-    ClassLoader classLoader = instrumentation.getTargetContext().getClassLoader();
-    Class<?> testClass = classLoader.loadClass(testSuite.getName());
+    Context targetContext = instrumentation.getTargetContext();
+    ClassLoader classLoader = targetContext.getClassLoader();
+    Class<?> testClass = classLoader.loadClass(suite.getName());
 
     Constructor<?> constructor = findBurstableConstructor(testClass);
     Enum<?>[][] constructorArgsList = Burst.explodeArguments(constructor);
 
-    @SuppressWarnings("unchecked") Enumeration<Test> testEnumerator = testSuite.tests();
+    @SuppressWarnings("unchecked") Enumeration<Test> testEnumerator = suite.tests();
     while (testEnumerator.hasMoreElements()) {
       Test test = testEnumerator.nextElement();
       if (test instanceof TestCase) {
         TestCase testCase = (TestCase) test;
+
         Method method = testClass.getMethod(testCase.getName());
+        if (!isMethodApplicable(suiteClass, method)) {
+          continue;
+        }
+
         for (Enum<?>[] methodArgs : Burst.explodeArguments(method)) {
           // Loop constructor args last so we only iterate and explode each test method once.
           for (Enum<?>[] constructorArgs : constructorArgsList) {
@@ -62,15 +114,15 @@ public class BurstAndroid extends AndroidTestRunner {
             // We can't call setName(name) - that would break TestCase's runTest which reflectively
             // invokes methods by name. Instead we generate a new class which overrides getName.
             // runTest won't break because it reads its name field directly, not through getName.
-            File dexCache = instrumentation.getTargetContext().getDir("dx", Context.MODE_PRIVATE);
+            File dexCache = targetContext.getDir("dx", Context.MODE_PRIVATE);
             TestCase instrumentedTestCase = TestInstrumenter.instrumentTestCase(testClass,
                 constructor.getParameterTypes(), constructorArgs, name, dexCache);
             instrumentedTestCase.setName(method.getName());
-            result.addTest(instrumentedTestCase);
+            exploded.addTest(instrumentedTestCase);
           }
         }
       } else if (test instanceof TestSuite) {
-        explodeSuite((TestSuite) test, result); // Recursively explode this suite's tests.
+        explodeSuite((TestSuite) test, exploded); // Recursively explode this suite's tests.
       } else {
         throw new IllegalStateException(
             "Unknown Test type. Not TestCase or TestSuite. " + test.getClass().getName());
