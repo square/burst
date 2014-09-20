@@ -1,7 +1,46 @@
 Burst
 =====
 
-TODO
+A unit testing library for varying test data.
+
+
+
+Usage
+-----
+
+*Coming soon.*
+
+For now, see `burst-android-test/instrumentation/src/main/java/com/example/burst/ExampleTestRunner.java`
+for Android and `burst-junit4/src/test/java/com/example/burst/ConstructorAndMethodTest.java` for JUnit 4.
+
+
+
+Download
+--------
+
+ *  **JUnit 4**
+
+    A test runner which can be used for JUnit 4.
+
+    ```
+    com.squareup.burst:burst-junit4:0.9.0-SNAPSHOT
+    ```
+
+ *  **Android (JUnit 3)**
+
+    A test runner for use by an `InstrumentationTestRunner` or one of its subclasses.
+
+    ```
+    com.squareup.burst:burst-android:0.9.0-SNAPSHOT
+    ```
+
+ *  **Core library**
+
+    Contains the core logic which creates the combinations of arguments for both constructors and method. Usually not useful on its own.
+
+    ```
+    com.squareup.burst:burst:0.9.0-SNAPSHOT
+    ```
 
 
 
