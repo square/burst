@@ -8,9 +8,9 @@ import static com.squareup.burst.BurstJUnit4.nameWithArguments;
 import static com.squareup.burst.Util.checkNotNull;
 
 final class BurstMethod extends FrameworkMethod {
-  private final Object[] methodArgs;
+  private final Enum<?>[] methodArgs;
 
-  BurstMethod(Method method, Object[] methodArgs) {
+  BurstMethod(Method method, Enum<?>[] methodArgs) {
     super(checkNotNull(method, "method"));
     this.methodArgs = checkNotNull(methodArgs, "methodArgs");
   }

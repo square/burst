@@ -28,15 +28,15 @@ public final class BurstJUnit4 extends Suite {
     List<FrameworkMethod> burstMethods = new ArrayList<>(testMethods.size());
     for (FrameworkMethod testMethod : testMethods) {
       Method method = testMethod.getMethod();
-      for (Object[] methodArgs : Burst.explodeArguments(method)) {
+      for (Enum<?>[] methodArgs : Burst.explodeArguments(method)) {
         burstMethods.add(new BurstMethod(method, methodArgs));
       }
     }
 
     Constructor<?> constructor = findConstructor(cls);
-    Object[][] constructorArgsList = Burst.explodeArguments(constructor);
+    Enum<?>[][] constructorArgsList = Burst.explodeArguments(constructor);
     List<Runner> burstRunners = new ArrayList<>(constructorArgsList.length);
-    for (Object[] constructorArgs : constructorArgsList) {
+    for (Enum<?>[] constructorArgs : constructorArgsList) {
       burstRunners.add(new BurstRunner(cls, constructor, constructorArgs, burstMethods));
     }
 
@@ -54,7 +54,7 @@ public final class BurstJUnit4 extends Suite {
     throw new IllegalStateException(cls.getName() + " requires a single public constructor.");
   }
 
-  static String nameWithArguments(String name, Object[] arguments) {
+  static String nameWithArguments(String name, Enum<?>[] arguments) {
     if (arguments.length == 0) {
       return name;
     }

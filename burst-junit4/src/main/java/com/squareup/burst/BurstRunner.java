@@ -13,10 +13,10 @@ import static com.squareup.burst.Util.checkNotNull;
 
 final class BurstRunner extends BlockJUnit4ClassRunner {
   private final Constructor<?> constructor;
-  private final Object[] constructorArgs;
+  private final Enum<?>[] constructorArgs;
   private final List<FrameworkMethod> methods;
 
-  BurstRunner(Class<?> cls, Constructor<?> constructor, Object[] constructorArgs,
+  BurstRunner(Class<?> cls, Constructor<?> constructor, Enum<?>[] constructorArgs,
       List<FrameworkMethod> methods) throws InitializationError {
     super(checkNotNull(cls, "cls"));
     this.constructor = checkNotNull(constructor, "constructor");
