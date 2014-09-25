@@ -10,13 +10,13 @@ import static com.squareup.burst.Util.checkNotNull;
  * constructors and methods.
  */
 public final class Burst {
-  private static final Object[][] NONE = new Object[1][0];
+  private static final Enum<?>[][] NONE = new Enum<?>[1][0];
 
   /**
    * Explode a list of argument values for invoking the specified constructor with all combinations
    * of its parameters.
    */
-  public static Object[][] explodeArguments(Constructor<?> constructor) {
+  public static Enum<?>[][] explodeArguments(Constructor<?> constructor) {
     checkNotNull(constructor, "constructor");
 
     return explodeParameters(constructor.getParameterTypes(),
@@ -27,7 +27,7 @@ public final class Burst {
    * Explode a list of argument values for invoking the specified method with all combinations of
    * its parameters.
    */
-  public static Object[][] explodeArguments(Method method) {
+  public static Enum<?>[][] explodeArguments(Method method) {
     checkNotNull(method, "method");
 
     return explodeParameters(method.getParameterTypes(),
@@ -46,7 +46,7 @@ public final class Burst {
    * @throws ClassCastException If any element of {@code constructorArgs} or {@code methodArgs} is
    * not an enum value.
    */
-  public static String friendlyName(Object[] arguments) {
+  public static String friendlyName(Enum<?>[] arguments) {
     checkNotNull(arguments, "arguments");
     if (arguments.length == 0) {
       return "";
@@ -65,7 +65,7 @@ public final class Burst {
     return builder.toString();
   }
 
-  private static Object[][] explodeParameters(Class<?>[] parameterTypes, String name) {
+  private static Enum<?>[][] explodeParameters(Class<?>[] parameterTypes, String name) {
     int parameterCount = parameterTypes.length;
     if (parameterCount == 0) {
       return NONE;
@@ -94,13 +94,13 @@ public final class Burst {
     return explode(count, valuesList);
   }
 
-  private static Object[][] explode(int count, Enum<?>[][] valuesList) {
+  private static Enum<?>[][] explode(int count, Enum<?>[][] valuesList) {
     // The number of times to replay iterating over individual enum values.
     int replays = 1;
     // The number of times to repeat an enum value.
     int adjacent = count;
 
-    Object[][] arguments = new Object[count][valuesList.length];
+    Enum<?>[][] arguments = new Enum<?>[count][valuesList.length];
     for (int valuesIndex = 0; valuesIndex < valuesList.length; valuesIndex++) {
       Enum<?>[] values = valuesList[valuesIndex];
 

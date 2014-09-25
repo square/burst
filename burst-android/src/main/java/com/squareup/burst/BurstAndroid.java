@@ -47,7 +47,7 @@ public class BurstAndroid extends AndroidTestRunner {
     Class<?> testClass = classLoader.loadClass(testSuite.getName());
 
     Constructor<?> constructor = findBurstableConstructor(testClass);
-    Object[][] constructorArgsList = Burst.explodeArguments(constructor);
+    Enum<?>[][] constructorArgsList = Burst.explodeArguments(constructor);
 
     @SuppressWarnings("unchecked") Enumeration<Test> testEnumerator = testSuite.tests();
     while (testEnumerator.hasMoreElements()) {
@@ -55,9 +55,9 @@ public class BurstAndroid extends AndroidTestRunner {
       if (test instanceof TestCase) {
         TestCase testCase = (TestCase) test;
         Method method = testClass.getMethod(testCase.getName());
-        for (Object[] methodArgs : Burst.explodeArguments(method)) {
+        for (Enum<?>[] methodArgs : Burst.explodeArguments(method)) {
           // Loop constructor args last so we only iterate and explode each test method once.
-          for (Object[] constructorArgs : constructorArgsList) {
+          for (Enum<?>[] constructorArgs : constructorArgsList) {
             String name = nameWithArguments(method.getName(), constructorArgs, methodArgs);
             // We can't call setName(name) - that would break TestCase's runTest which reflectively
             // invokes methods by name. Instead we generate a new class which overrides getName.
@@ -105,8 +105,8 @@ public class BurstAndroid extends AndroidTestRunner {
     throw new AssertionError("JUnit should have rejected this class: " + cls.getName());
   }
 
-  private static String nameWithArguments(String name, Object[] constructorArgs,
-      Object[] methodArgs) {
+  private static String nameWithArguments(String name, Enum<?>[] constructorArgs,
+      Enum<?>[] methodArgs) {
     StringBuilder builder = new StringBuilder(name);
     if (constructorArgs.length > 0) {
       builder.append('[').append(Burst.friendlyName(constructorArgs)).append(']');
