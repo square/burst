@@ -85,13 +85,13 @@ public class BurstAndroid extends AndroidTestRunner {
 
   private void explodeSuite(TestSuite suite, TestSuite exploded) throws Exception {
     Class<? extends TestSuite> suiteClass = suite.getClass();
-    if (!isClassApplicable(suiteClass)) {
-      return;
-    }
 
     Context targetContext = instrumentation.getTargetContext();
     ClassLoader classLoader = targetContext.getClassLoader();
     Class<?> testClass = classLoader.loadClass(suite.getName());
+    if (!isClassApplicable(testClass)) {
+      return;
+    }
 
     Constructor<?> constructor = findBurstableConstructor(testClass);
     Enum<?>[][] constructorArgsList = Burst.explodeArguments(constructor);
