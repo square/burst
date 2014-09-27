@@ -84,8 +84,6 @@ public class BurstAndroid extends AndroidTestRunner {
   }
 
   private void explodeSuite(TestSuite suite, TestSuite exploded) throws Exception {
-    Class<? extends TestSuite> suiteClass = suite.getClass();
-
     Context targetContext = instrumentation.getTargetContext();
     ClassLoader classLoader = targetContext.getClassLoader();
     Class<?> testClass = classLoader.loadClass(suite.getName());
@@ -103,7 +101,7 @@ public class BurstAndroid extends AndroidTestRunner {
         TestCase testCase = (TestCase) test;
 
         Method method = testClass.getMethod(testCase.getName());
-        if (!isMethodApplicable(suiteClass, method)) {
+        if (!isMethodApplicable(testClass, method)) {
           continue;
         }
 
