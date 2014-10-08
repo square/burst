@@ -69,18 +69,17 @@ final class TestInstrumenter {
    * in the test class. This is to avoid touching fields added by dexmaker in the proxy class.
    */
   private static void scrub(Class<?> testClass, TestCase testCase) throws IllegalAccessException {
-    final Field[] fields = testClass.getDeclaredFields();
-    for (Field field : fields) {
+    for (Field field : testClass.getDeclaredFields()) {
       if (!field.getType().isPrimitive() && (field.getModifiers() & Modifier.FINAL) == 0) {
         try {
           field.setAccessible(true);
           field.set(testCase, null);
         } catch (Exception e) {
-          Log.d("TestInstrumenter", "Error: Could not nullify field!");
+          Log.e("TestInstrumenter", "Error: Could not nullify field!");
         }
 
         if (field.get(testCase) != null) {
-          Log.d("TestInstrumenter", "Error: Could not nullify field!");
+          Log.e("TestInstrumenter", "Error: Could not nullify field!");
         }
       }
     }
