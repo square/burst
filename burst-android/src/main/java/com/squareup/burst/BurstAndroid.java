@@ -91,15 +91,14 @@ public class BurstAndroid extends AndroidTestRunner {
       return;
     }
 
-    Constructor<?> constructor = findBurstableConstructor(testClass);
-    Enum<?>[][] constructorArgsList = Burst.explodeArguments(constructor);
-
     @SuppressWarnings("unchecked") Enumeration<Test> testEnumerator = suite.tests();
     while (testEnumerator.hasMoreElements()) {
       Test test = testEnumerator.nextElement();
       if (test instanceof TestCase) {
-        TestCase testCase = (TestCase) test;
+        Constructor<?> constructor = findBurstableConstructor(testClass);
+        Enum<?>[][] constructorArgsList = Burst.explodeArguments(constructor);
 
+        TestCase testCase = (TestCase) test;
         Method method = testClass.getMethod(testCase.getName());
         if (!isMethodApplicable(testClass, method)) {
           continue;
@@ -111,7 +110,7 @@ public class BurstAndroid extends AndroidTestRunner {
             String name = nameWithArguments(method.getName(), constructorArgs, methodArgs);
             // We can't call setName(name) - that would break TestCase's runTest which reflectively
             // invokes methods by name. Instead we generate a new class which overrides getName.
-            // runTest won't break because it reads its name field directly, not through getName.
+            // The override will return the original method name while runTest is executing.
             File dexCache = targetContext.getDir("dx", Context.MODE_PRIVATE);
             TestCase instrumentedTestCase = TestInstrumenter.instrumentTestCase(testClass,
                 constructor.getParameterTypes(), constructorArgs, name, dexCache);

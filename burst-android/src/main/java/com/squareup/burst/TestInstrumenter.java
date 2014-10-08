@@ -1,10 +1,14 @@
 package com.squareup.burst;
 
+import android.util.Log;
 import com.google.dexmaker.stock.ProxyBuilder;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.concurrent.atomic.AtomicBoolean;
 import junit.framework.TestCase;
 
 final class TestInstrumenter {
@@ -20,12 +24,29 @@ final class TestInstrumenter {
    * @param dexCache a location where dex files can be written
    * @return the instrumented test case
    */
-  public static TestCase instrumentTestCase(Class<?> testClass, Class<?>[] constructorArgTypes,
-      Object[] constructorArgValues, final String name, File dexCache) {
+  public static TestCase instrumentTestCase(final Class<?> testClass,
+      Class<?>[] constructorArgTypes, Object[] constructorArgValues, final String name,
+      File dexCache) {
     InvocationHandler handler = new InvocationHandler() {
+      final AtomicBoolean inRunTest = new AtomicBoolean();
+
       @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (method.getName().equals("getName")) {
-          return name;
+        switch (method.getName()) {
+          case "runTest":
+            inRunTest.set(true);
+            ProxyBuilder.callSuper(proxy, method, args);
+            inRunTest.set(false);
+            return null;
+          case "getName":
+            // Normally we want getName() to return our descriptive test name, but if runTest() is
+            // executing, we must return the plain method name since it may be invoked reflectively.
+            if (!inRunTest.get()) {
+              return name;
+            }
+            break;
+          case "scrubClass":
+            scrub(testClass, (TestCase) proxy);
+            return null;
         }
         return ProxyBuilder.callSuper(proxy, method, args);
       }
@@ -40,6 +61,28 @@ final class TestInstrumenter {
           .build();
     } catch (IOException e) {
       throw new RuntimeException("Instrumentation failed.", e);
+    }
+  }
+
+  /**
+   * Like {@link android.test.ActivityTestCase#scrubClass(Class)}, but only looks at fields declared
+   * in the test class. This is to avoid touching fields added by dexmaker in the proxy class.
+   */
+  private static void scrub(Class<?> testClass, TestCase testCase) throws IllegalAccessException {
+    final Field[] fields = testClass.getDeclaredFields();
+    for (Field field : fields) {
+      if (!field.getType().isPrimitive() && (field.getModifiers() & Modifier.FINAL) == 0) {
+        try {
+          field.setAccessible(true);
+          field.set(testCase, null);
+        } catch (Exception e) {
+          Log.d("TestInstrumenter", "Error: Could not nullify field!");
+        }
+
+        if (field.get(testCase) != null) {
+          Log.d("TestInstrumenter", "Error: Could not nullify field!");
+        }
+      }
     }
   }
 
