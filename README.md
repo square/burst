@@ -142,7 +142,7 @@ Download
     A test runner which can be used for JUnit 4.
 
     ```
-    com.squareup.burst:burst-junit4:0.9.0-SNAPSHOT
+    com.squareup.burst:burst-junit4:1.0.0
     ```
 
  *  **Android (JUnit 3)**
@@ -150,7 +150,7 @@ Download
     A test runner for use by an `InstrumentationTestRunner` or one of its subclasses.
 
     ```
-    com.squareup.burst:burst-android:0.9.0-SNAPSHOT
+    com.squareup.burst:burst-android:1.0.0
     ```
 
  *  **Core library**
@@ -159,7 +159,7 @@ Download
     method. Usually not useful on its own.
 
     ```
-    com.squareup.burst:burst:0.9.0-SNAPSHOT
+    com.squareup.burst:burst:1.0.0
     ```
 
 
