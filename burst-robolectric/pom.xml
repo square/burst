@@ -23,6 +23,19 @@
       <artifactId>burst-junit4</artifactId>
       <version>${project.version}</version>
     </dependency>
+      <dependency>
+      <groupId>com.squareup.burst</groupId>
+      <artifactId>burst-android-test-app</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.burst</groupId>
+      <artifactId>burst-android-test-app</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <type>apk</type>
+    </dependency>
     <dependency>
       <groupId>org.robolectric</groupId>
       <artifactId>robolectric</artifactId>
