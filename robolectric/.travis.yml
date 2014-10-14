@@ -1,0 +1,18 @@
+language: java
+before_install:
+    - wget http://dl.google.com/android/android-sdk_r22.3-linux.tgz
+    - tar xzf android-sdk_r22.3-linux.tgz
+    - export ANDROID_HOME=$PWD/android-sdk-linux
+    - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+    - echo y | android update sdk --filter platform-tools,android-18,addon-google_apis-google-18,extra-android-m2repository --no-ui --force
+    - ./scripts/install-maps-jar.sh
+    - ./scripts/install-support-jar.sh
+
+after_success:
+    - ./scripts/install-snapshot.sh
+
+env:
+    global:
+        - secure: "AnsdYjHIvtLXrDMJmlf5FJhXJOW+aLSvsyXcGFLKse6EcwTSw8XnE4bGv2eSi2YWIwoHHCStIQbI0J02rkmUu9Z5oChxhOyGtCd8U4l1XciH2U7vJOJ/i9Auw5WgLM6x8HxgH6myhNrA9xrB4fcH+8WsDMf+qLqgvJQQjqQZQGM="
+        - secure: "tKWNiNnT+WPmHNY1MtXTgwId9peXtsKQ5owdOfZqmEQYTSHVdya5Bt3CiK8U829Pa1ZBuF+9mnGufTbw0WfQM5TKlClDn4ciEJzz6ChS2cqO+6trsWy335nppU7pQsDE44Irju+E7Jh4kIjfnB2pWRhI2YAoAUhNyz39PawXsz8="
+

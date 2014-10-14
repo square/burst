@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="org.robolectric">
+  <uses-sdk android:targetSdkVersion="18"/>
+
+  <!-- todo: get @Config(manifest=xxx) working -->
+  <application android:name="org.robolectric.TestApplication"
+         android:theme="@style/Theme.Robolectric"
+         android:label="@string/app_name">
+
+    <activity android:name="org.robolectric.shadows.ThemeTest$TestActivity"/>
+
+    <activity android:name="org.robolectric.shadows.ThemeTest$TestActivityWithAnotherTheme"
+          android:theme="@style/Theme.AnotherTheme"/>
+
+    <activity android:name="org.robolectric.shadows.ThemeTest$TestActivityWithAThirdTheme"
+          android:theme="@style/Theme.ThirdTheme"/>
+  </application>
+</manifest>
