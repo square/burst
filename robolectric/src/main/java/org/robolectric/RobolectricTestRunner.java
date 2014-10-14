@@ -59,12 +59,12 @@ import static org.fest.reflect.core.Reflection.type;
  * provide a simulation of the Android runtime environment.
  */
 public class RobolectricTestRunner extends BlockJUnit4ClassRunner {
-  private static final MavenCentral MAVEN_CENTRAL = new MavenCentral();
+  protected static final MavenCentral MAVEN_CENTRAL = new MavenCentral();
   private static final Map<Class<? extends RobolectricTestRunner>, EnvHolder> envHoldersByTestRunner = new HashMap<Class<? extends RobolectricTestRunner>, EnvHolder>();
   private static Map<Pair<AndroidManifest, SdkConfig>, ResourceLoader> resourceLoadersByManifestAndConfig = new HashMap<Pair<AndroidManifest, SdkConfig>, ResourceLoader>();
   private static ShadowMap mainShadowMap;
   private final EnvHolder envHolder;
-  private TestLifecycle<Application> testLifecycle;
+  protected TestLifecycle<Application> testLifecycle;
 
   static {
     new SecureRandom(); // this starts up the Poller SunPKCS11-Darwin thread early, outside of any Robolectric classloader
@@ -73,7 +73,7 @@ public class RobolectricTestRunner extends BlockJUnit4ClassRunner {
   private Class<? extends RobolectricTestRunner> lastTestRunnerClass;
   private SdkConfig lastSdkConfig;
   private SdkEnvironment lastSdkEnvironment;
-  private final HashSet<Class<?>> loadedTestClasses = new HashSet<Class<?>>();
+  protected final HashSet<Class<?>> loadedTestClasses = new HashSet<Class<?>>();
 
   /**
    * Creates a runner to run {@code testClass}. Looks in your working directory for your AndroidManifest.xml file
@@ -97,7 +97,7 @@ public class RobolectricTestRunner extends BlockJUnit4ClassRunner {
     this.envHolder = envHolder;
   }
 
-  private void assureTestLifecycle(SdkEnvironment sdkEnvironment) {
+  protected void assureTestLifecycle(SdkEnvironment sdkEnvironment) {
     try {
       ClassLoader robolectricClassLoader = sdkEnvironment.getRobolectricClassLoader();
       testLifecycle = (TestLifecycle) robolectricClassLoader.loadClass(getTestLifecycleClass().getName()).newInstance();
@@ -272,7 +272,7 @@ public class RobolectricTestRunner extends BlockJUnit4ClassRunner {
     };
   }
 
-  private void invokeBeforeClass(final Class clazz) throws Throwable {
+  protected void invokeBeforeClass(final Class clazz) throws Throwable {
     if (!loadedTestClasses.contains(clazz)) {
       loadedTestClasses.add(clazz);
 
@@ -292,7 +292,7 @@ public class RobolectricTestRunner extends BlockJUnit4ClassRunner {
     }
   }
 
-  private SdkEnvironment getEnvironment(final AndroidManifest appManifest, final Config config) {
+  protected SdkEnvironment getEnvironment(final AndroidManifest appManifest, final Config config) {
     final SdkConfig sdkConfig = pickSdkVersion(appManifest, config);
 
     // keep the most recently-used SdkEnvironment strongly reachable to prevent thrashing in low-memory situations.
@@ -448,7 +448,7 @@ public class RobolectricTestRunner extends BlockJUnit4ClassRunner {
     }
   }
 
-  private ParallelUniverseInterface getHooksInterface(SdkEnvironment sdkEnvironment) {
+  protected ParallelUniverseInterface getHooksInterface(SdkEnvironment sdkEnvironment) {
     ClassLoader robolectricClassLoader = sdkEnvironment.getRobolectricClassLoader();
     Class<? extends ParallelUniverseInterface> parallelUniverseClass =
         type(ParallelUniverse.class.getName())
@@ -543,7 +543,7 @@ public class RobolectricTestRunner extends BlockJUnit4ClassRunner {
    * @param method
    * @return
    */
-  private Map<Field, Object> getWithConstantAnnotations(Method method) {
+  protected Map<Field, Object> getWithConstantAnnotations(Method method) {
     Map<Field, Object> constants = new HashMap<Field, Object>();
 
     for (Annotation anno : method.getDeclaringClass().getAnnotations()) {
@@ -595,7 +595,7 @@ public class RobolectricTestRunner extends BlockJUnit4ClassRunner {
    *
    * @param constants
    */
-  private void setupConstants(Map<Field, Object> constants) {
+  protected void setupConstants(Map<Field, Object> constants) {
     for (Field field : constants.keySet()) {
       Object newValue = constants.get(field);
       Object oldValue = Robolectric.Reflection.setFinalStaticField(field, newValue);
