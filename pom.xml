@@ -22,6 +22,7 @@
     <module>burst-android</module>
     <module>burst-android-test</module>
     <module>burst-junit4</module>
+    <module>burst-robolectric</module>
     <module>robolectric</module>
   </modules>
 
