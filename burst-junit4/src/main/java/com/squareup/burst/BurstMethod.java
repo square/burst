@@ -30,4 +30,8 @@ final class BurstMethod extends FrameworkMethod {
   @Override public String getName() {
     return nameWithArguments(super.getName(), methodArgs);
   }
+
+  Enum[] getMethodArgs() {
+    return methodArgs;
+  }
 }

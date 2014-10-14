@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.squareup.burst</groupId>
+    <artifactId>burst-parent</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>burst-robolectric</artifactId>
+  <name>Burst Robolectric Integration</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.squareup.burst</groupId>
+      <artifactId>burst</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.burst</groupId>
+      <artifactId>burst-junit4</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+      <dependency>
+      <groupId>com.squareup.burst</groupId>
+      <artifactId>burst-android-test-app</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.burst</groupId>
+      <artifactId>burst-android-test-app</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <type>apk</type>
+    </dependency>
+    <dependency>
+      <groupId>org.robolectric</groupId>
+      <artifactId>robolectric</artifactId>
+      <version>2.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.android</groupId>
+      <artifactId>android-test</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
