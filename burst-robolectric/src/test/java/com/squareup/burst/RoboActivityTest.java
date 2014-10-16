@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(BurstRobolectric.class)
 @Config(manifest = "./burst-android-test/app/AndroidManifest.xml", emulateSdk = 18)
-public class RoboActivityTest {
+final public class RoboActivityTest {
   private final RoboSoda soda;
 
   public RoboActivityTest(RoboSoda soda) {
@@ -32,9 +32,7 @@ public class RoboActivityTest {
     assertTrue(true);
   }
 
-
-  @Test
-  public void testDrinkIsDisplayed() {
+  @Test public void testDrinkIsDisplayed() {
     Activity activity = Robolectric.buildActivity(RootActivity.class).create().get();
     View decorView = activity.getWindow().getDecorView();
     ArrayList<View> viewsWithMatchingDrinkName = new ArrayList<>();

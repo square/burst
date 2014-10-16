@@ -22,7 +22,7 @@ public final class RoboMethodTest {
     assertNotNull(soda);
   }
 
-  // tests that the correct method is called when two have the same name but different signatures
+  // Verifies the correct method is called when the name is the same but the parameters vary.
   @Test public void single(RoboSoda soda, RoboSnack snack) {
     assertNotNull(soda);
     assertNotNull(snack);

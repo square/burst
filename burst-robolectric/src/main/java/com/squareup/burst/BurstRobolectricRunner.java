@@ -10,7 +10,14 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
-import org.robolectric.*;
+import org.robolectric.AndroidManifest;
+import org.robolectric.EnvHolder;
+import org.robolectric.MavenCentral;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.SdkConfig;
+import org.robolectric.SdkEnvironment;
+import org.robolectric.TestLifecycle;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.WithConstantInt;
 import org.robolectric.annotation.WithConstantString;
@@ -30,10 +37,12 @@ import java.util.Map;
 
 import static com.squareup.burst.BurstJUnit4.nameWithArguments;
 import static com.squareup.burst.Util.checkNotNull;
-import static org.fest.reflect.core.Reflection.*;
+import static org.fest.reflect.core.Reflection.constructor;
+import static org.fest.reflect.core.Reflection.staticField;
+import static org.fest.reflect.core.Reflection.type;
 
 
-public class BurstRobolectricRunner extends RobolectricTestRunner {
+class BurstRobolectricRunner extends RobolectricTestRunner {
   private final Enum<?>[] constructorArgs;
   private final List<FrameworkMethod> methods;
 
@@ -73,28 +82,32 @@ public class BurstRobolectricRunner extends RobolectricTestRunner {
   }
 
   @Override protected void validatePublicVoidNoArgMethods(Class<? extends Annotation> annotation,
-                                                          boolean isStatic, List<Throwable> errors) {
+      boolean isStatic, List<Throwable> errors) {
     // Methods were already validated by Burst.
   }
 
   private static final MavenCentral MAVEN_CENTRAL = new MavenCentral();
-  private static final Map<Class<? extends BurstRobolectricRunner>, EnvHolder> envHoldersByTestRunner = new HashMap<>();
+  private static final Map<Class<? extends BurstRobolectricRunner>, EnvHolder>
+      envHoldersByTestRunner = new HashMap<>();
   private final EnvHolder envHolder;
   private TestLifecycle<Application> testLifecycle;
 
   static {
-    new SecureRandom(); // this starts up the Poller SunPKCS11-Darwin thread early, outside of any Robolectric classloader
+    // This starts up the Poller SunPKCS11-Darwin thread early,
+    // outside of any Robolectric classloader.
+    new SecureRandom();
   }
 
   private Class<? extends BurstRobolectricRunner> lastTestRunnerClass;
   private SdkConfig lastSdkConfig;
   private SdkEnvironment lastSdkEnvironment;
-  private final HashSet<Class<?>> loadedTestClasses = new HashSet<Class<?>>();
+  private final HashSet<Class<?>> loadedTestClasses = new HashSet<>();
 
   private void assureTestLifecycle(SdkEnvironment sdkEnvironment) {
     try {
       ClassLoader robolectricClassLoader = sdkEnvironment.getRobolectricClassLoader();
-      testLifecycle = (TestLifecycle) robolectricClassLoader.loadClass(getTestLifecycleClass().getName()).newInstance();
+      testLifecycle = (TestLifecycle) robolectricClassLoader.loadClass(
+          getTestLifecycleClass().getName()).newInstance();
     } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
@@ -136,7 +149,8 @@ public class BurstRobolectricRunner extends RobolectricTestRunner {
         SdkEnvironment sdkEnvironment = getEnvironment(appManifest, config);
         Thread.currentThread().setContextClassLoader(sdkEnvironment.getRobolectricClassLoader());
 
-        Class bootstrappedTestClass = sdkEnvironment.bootstrappedClass(getTestClass().getJavaClass());
+        Class bootstrappedTestClass = sdkEnvironment
+            .bootstrappedClass(getTestClass().getJavaClass());
         BurstHelperTestRunner helperTestRunner = getHelperTestRunner(bootstrappedTestClass);
 
         Method bootstrappedMethod = null;
@@ -152,7 +166,8 @@ public class BurstRobolectricRunner extends RobolectricTestRunner {
         }
         Enum[] args = new Enum[burstMethod.getMethodArgs().length];
         for (int i = 0; i < burstMethod.getMethodArgs().length; i++) {
-          Class<? extends Enum> enumClass = (Class<? extends Enum>) bootstrappedMethod.getParameterTypes()[i];
+          Class<? extends Enum> enumClass =
+              (Class<? extends Enum>) bootstrappedMethod.getParameterTypes()[i];
           String enumName = burstMethod.getMethodArgs()[i].name();
           args[i] = Enum.valueOf(enumClass, enumName);
         };
@@ -176,15 +191,18 @@ public class BurstRobolectricRunner extends RobolectricTestRunner {
           Class<?> versionClass = sdkEnvironment.bootstrappedClass(Build.VERSION.class);
           staticField("SDK_INT").ofType(int.class).in(versionClass).set(sdkVersion);
 
-          ResourceLoader systemResourceLoader = sdkEnvironment.getSystemResourceLoader(MAVEN_CENTRAL, BurstRobolectricRunner.this);
-          setUpApplicationState(bootstrappedMethod, parallelUniverseInterface, strictI18n, systemResourceLoader, appManifest, config);
+          ResourceLoader systemResourceLoader = sdkEnvironment.getSystemResourceLoader(
+              MAVEN_CENTRAL, BurstRobolectricRunner.this);
+          setUpApplicationState(bootstrappedMethod, parallelUniverseInterface, strictI18n,
+              systemResourceLoader, appManifest, config);
           testLifecycle.beforeTest(bootstrappedMethod);
         } catch (Exception e) {
           e.printStackTrace();
           throw new RuntimeException(e);
         }
 
-        final Statement statement = helperTestRunner.methodBlock(new BurstMethod(bootstrappedMethod, args));
+        final Statement statement = helperTestRunner.methodBlock(
+            new BurstMethod(bootstrappedMethod, args));
 
         Map<Field, Object> withConstantAnnos = getWithConstantAnnotations(bootstrappedMethod);
 
@@ -206,9 +224,11 @@ public class BurstRobolectricRunner extends RobolectricTestRunner {
             try {
               internalAfterTest(bootstrappedMethod);
             } finally {
-              parallelUniverseInterface.resetStaticState(); // afterward too, so stuff doesn't hold on to classes?
-              // todo: is this really needed?
-              Thread.currentThread().setContextClassLoader(RobolectricTestRunner.class.getClassLoader());
+              // Afterward too, so stuff doesn't hold on to classes?
+              parallelUniverseInterface.resetStaticState();
+              // TODO: Is this really needed?
+              Thread.currentThread()
+                  .setContextClassLoader(RobolectricTestRunner.class.getClassLoader());
             }
           }
         }
@@ -240,7 +260,8 @@ public class BurstRobolectricRunner extends RobolectricTestRunner {
   private SdkEnvironment getEnvironment(final AndroidManifest appManifest, final Config config) {
     final SdkConfig sdkConfig = pickSdkVersion(appManifest, config);
 
-    // keep the most recently-used SdkEnvironment strongly reachable to prevent thrashing in low-memory situations.
+    // Keep the most recently-used SdkEnvironment strongly reachable
+    // to prevent thrashing in low-memory situations.
     if (getClass().equals(lastTestRunnerClass) && sdkConfig.equals(lastSdkConfig)) {
       return lastSdkEnvironment;
     }
@@ -258,8 +279,11 @@ public class BurstRobolectricRunner extends RobolectricTestRunner {
   }
 
   @Override
-  protected void setUpApplicationState(Method method, ParallelUniverseInterface parallelUniverseInterface, boolean strictI18n, ResourceLoader systemResourceLoader, AndroidManifest appManifest, Config config) {
-    parallelUniverseInterface.setUpApplicationState(method, testLifecycle, strictI18n, systemResourceLoader, appManifest, config);
+  protected void setUpApplicationState(Method method, ParallelUniverseInterface
+      parallelUniverseInterface, boolean strictI18n, ResourceLoader systemResourceLoader,
+                                       AndroidManifest appManifest, Config config) {
+    parallelUniverseInterface.setUpApplicationState(method, testLifecycle, strictI18n,
+        systemResourceLoader, appManifest, config);
   }
 
   private ParallelUniverseInterface getHooksInterface(SdkEnvironment sdkEnvironment) {
@@ -289,13 +313,13 @@ public class BurstRobolectricRunner extends RobolectricTestRunner {
    * addConstantFromAnnotation() for evaluation.
    * <p/>
    * TODO: Add compound annotations to support defining more than one int and string at a time
-   * TODO: See http://stackoverflow.com/questions/1554112/multiple-annotations-of-the-same-type-on-one-element
+   * http://stackoverflow.com/questions/1554112/multiple-annotations-of-the-same-type-on-one-element
    *
    * @param method
    * @return
    */
   private Map<Field, Object> getWithConstantAnnotations(Method method) {
-    Map<Field, Object> constants = new HashMap<Field, Object>();
+    Map<Field, Object> constants = new HashMap<>();
 
     for (Annotation anno : method.getDeclaringClass().getAnnotations()) {
       addConstantFromAnnotation(constants, anno);
@@ -318,7 +342,7 @@ public class BurstRobolectricRunner extends RobolectricTestRunner {
   private void addConstantFromAnnotation(Map<Field, Object> constants, Annotation anno) {
     try {
       String name = anno.annotationType().getName();
-      Object newValue = null;
+      Object newValue;
 
       if (name.equals(WithConstantString.class.getName())) {
         newValue = anno.annotationType().getMethod("newValue").invoke(anno);
@@ -372,8 +396,8 @@ public class BurstRobolectricRunner extends RobolectricTestRunner {
     }
 
     @Override
-    protected void validatePublicVoidNoArgMethods(Class<? extends Annotation> annotation, boolean isStatic,
-                                                  List<Throwable> errors) {
+    protected void validatePublicVoidNoArgMethods(Class<? extends Annotation> annotation,
+        boolean isStatic, List<Throwable> errors) {
       BurstRobolectricRunner.this.validatePublicVoidNoArgMethods(annotation, isStatic, errors);
     }
 
@@ -391,7 +415,8 @@ public class BurstRobolectricRunner extends RobolectricTestRunner {
       }
       Enum[] parallelArgs = new Enum[parallelConstructor.getParameterTypes().length];
       for (int i = 0; i < constructorArgs.length; i++) {
-        Class<? extends Enum> enumClass = (Class<? extends Enum>) parallelConstructor.getParameterTypes()[i];
+        Class<? extends Enum> enumClass =
+            (Class<? extends Enum>) parallelConstructor.getParameterTypes()[i];
         String enumName = constructorArgs[i].name();
         parallelArgs[i] = Enum.valueOf(enumClass, enumName);
       }

@@ -53,7 +53,8 @@ public final class BurstJUnit4 extends Suite {
           Class.class, Constructor.class, Enum[].class, List.class);
       return (Runner) runnerConstructor.newInstance(cls, constructor, constructorArgs, methods);
     } catch (NoSuchMethodException e) {
-      throw new RuntimeException("Runner must have constructor with params: Class, Constructor, Enum[], List", e);
+      throw new RuntimeException("Runner must have constructor with params: Class, Constructor, "
+          + "Enum[], List", e);
     } catch (ReflectiveOperationException e) {
       throw new RuntimeException("Unable to instantiate test runner", e);
     }
