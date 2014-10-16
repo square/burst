@@ -39,7 +39,7 @@
     <dependency>
       <groupId>org.robolectric</groupId>
       <artifactId>robolectric</artifactId>
-      <version>2.3</version>
+      <scope>optional</scope>
     </dependency>
     <dependency>
       <groupId>com.google.android</groupId>
@@ -50,11 +50,20 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.easytesting</groupId>
+      <artifactId>fest-reflect</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-ant-tasks</artifactId>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
