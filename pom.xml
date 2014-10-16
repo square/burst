@@ -22,6 +22,7 @@
     <module>burst-android</module>
     <module>burst-android-test</module>
     <module>burst-junit4</module>
+    <module>burst-robolectric</module>
   </modules>
 
   <properties>
@@ -33,6 +34,9 @@
 
     <assertj.version>1.6.1</assertj.version>
     <dexmaker.version>1.1</dexmaker.version>
+
+    <robolectric.version>2.3</robolectric.version>
+    <festreflect.version>1.4.1</festreflect.version>
   </properties>
 
   <scm>
@@ -80,6 +84,16 @@
         <groupId>com.google.dexmaker</groupId>
         <artifactId>dexmaker</artifactId>
         <version>${dexmaker.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.robolectric</groupId>
+        <artifactId>robolectric</artifactId>
+        <version>${robolectric.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.easytesting</groupId>
+        <artifactId>fest-reflect</artifactId>
+        <version>${festreflect.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
