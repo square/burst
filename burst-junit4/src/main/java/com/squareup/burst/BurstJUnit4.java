@@ -25,7 +25,7 @@ public final class BurstJUnit4 extends Suite {
     super(cls, explode(cls));
   }
 
-  /**
+  /*
    * ParentRunner's default filter implementation generates a hierarchy of test descriptions,
    * applies the filter to those descriptions, and removes any test nodes whose descriptions were
    * all filtered out.

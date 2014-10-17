@@ -8,7 +8,7 @@ import org.junit.runners.ParentRunner;
 /**
  * Exposes {@link ParentRunner}'s private members.
  */
-class ParentRunnerSpy {
+final class ParentRunnerSpy {
   private static final Method getFilteredChildrenMethod;
 
   static {

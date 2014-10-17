@@ -55,7 +55,7 @@ final class BurstRunner extends BlockJUnit4ClassRunner {
     // Methods were already validated by Burst.
   }
 
-  /**
+  /*
    * ParentRunner's default filter implementation generates a hierarchy of test descriptions,
    * applies the filter to those descriptions, and removes any test nodes whose descriptions were
    * all filtered out.
