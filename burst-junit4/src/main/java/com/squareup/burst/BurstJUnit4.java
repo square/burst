@@ -1,6 +1,5 @@
 package com.squareup.burst;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +62,7 @@ public final class BurstJUnit4 extends Suite {
       }
     }
 
-    Constructor<?> constructor = BurstableConstructor.findSingle(cls);
+    TestConstructor constructor = BurstableConstructor.findSingle(cls);
     Enum<?>[][] constructorArgsList = Burst.explodeArguments(constructor);
     List<Runner> burstRunners = new ArrayList<>(constructorArgsList.length);
     for (Enum<?>[] constructorArgs : constructorArgsList) {

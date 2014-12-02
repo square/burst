@@ -113,4 +113,64 @@ public final class BurstJUnit4Test {
         "START none(com.squareup.burst.ConstructorAndMethodTest[Soda.RC_COLA])",
         "FINISH none(com.squareup.burst.ConstructorAndMethodTest[Soda.RC_COLA])");
   }
+
+  @Test public void singleField() throws InitializationError {
+    BurstJUnit4 runner = new BurstJUnit4(SingleFieldTest.class);
+    runner.run(listener.notifier());
+    assertThat(listener.journal()).containsExactly(
+        "START testMethod(com.squareup.burst.SingleFieldTest[Soda.PEPSI])",
+        "FINISH testMethod(com.squareup.burst.SingleFieldTest[Soda.PEPSI])",
+        "START testMethod(com.squareup.burst.SingleFieldTest[Soda.COKE])",
+        "FINISH testMethod(com.squareup.burst.SingleFieldTest[Soda.COKE])",
+        "START testMethod(com.squareup.burst.SingleFieldTest[Soda.RC_COLA])",
+        "FINISH testMethod(com.squareup.burst.SingleFieldTest[Soda.RC_COLA])");
+  }
+
+  @Test public void multipleFields() throws InitializationError {
+    BurstJUnit4 runner = new BurstJUnit4(MultipleFieldsTest.class);
+    runner.run(listener.notifier());
+    assertThat(listener.journal()).containsExactly(
+        "START testMethod(com.squareup.burst.MultipleFieldsTest[Soda.PEPSI, Snack.CHIPS])",
+        "FINISH testMethod(com.squareup.burst.MultipleFieldsTest[Soda.PEPSI, Snack.CHIPS])",
+        "START testMethod(com.squareup.burst.MultipleFieldsTest[Soda.PEPSI, Snack.NUTS])",
+        "FINISH testMethod(com.squareup.burst.MultipleFieldsTest[Soda.PEPSI, Snack.NUTS])",
+        "START testMethod(com.squareup.burst.MultipleFieldsTest[Soda.PEPSI, Snack.CANDY])",
+        "FINISH testMethod(com.squareup.burst.MultipleFieldsTest[Soda.PEPSI, Snack.CANDY])",
+        "START testMethod(com.squareup.burst.MultipleFieldsTest[Soda.COKE, Snack.CHIPS])",
+        "FINISH testMethod(com.squareup.burst.MultipleFieldsTest[Soda.COKE, Snack.CHIPS])",
+        "START testMethod(com.squareup.burst.MultipleFieldsTest[Soda.COKE, Snack.NUTS])",
+        "FINISH testMethod(com.squareup.burst.MultipleFieldsTest[Soda.COKE, Snack.NUTS])",
+        "START testMethod(com.squareup.burst.MultipleFieldsTest[Soda.COKE, Snack.CANDY])",
+        "FINISH testMethod(com.squareup.burst.MultipleFieldsTest[Soda.COKE, Snack.CANDY])",
+        "START testMethod(com.squareup.burst.MultipleFieldsTest[Soda.RC_COLA, Snack.CHIPS])",
+        "FINISH testMethod(com.squareup.burst.MultipleFieldsTest[Soda.RC_COLA, Snack.CHIPS])",
+        "START testMethod(com.squareup.burst.MultipleFieldsTest[Soda.RC_COLA, Snack.NUTS])",
+        "FINISH testMethod(com.squareup.burst.MultipleFieldsTest[Soda.RC_COLA, Snack.NUTS])",
+        "START testMethod(com.squareup.burst.MultipleFieldsTest[Soda.RC_COLA, Snack.CANDY])",
+        "FINISH testMethod(com.squareup.burst.MultipleFieldsTest[Soda.RC_COLA, Snack.CANDY])");
+  }
+
+  @Test public void fieldAndMethod() throws InitializationError {
+    BurstJUnit4 runner = new BurstJUnit4(FieldAndMethodTest.class);
+    runner.run(listener.notifier());
+    assertThat(listener.journal()).containsExactly(
+        "START testMethod[Soda.PEPSI](com.squareup.burst.FieldAndMethodTest[Snack.CHIPS])",
+        "FINISH testMethod[Soda.PEPSI](com.squareup.burst.FieldAndMethodTest[Snack.CHIPS])",
+        "START testMethod[Soda.COKE](com.squareup.burst.FieldAndMethodTest[Snack.CHIPS])",
+        "FINISH testMethod[Soda.COKE](com.squareup.burst.FieldAndMethodTest[Snack.CHIPS])",
+        "START testMethod[Soda.RC_COLA](com.squareup.burst.FieldAndMethodTest[Snack.CHIPS])",
+        "FINISH testMethod[Soda.RC_COLA](com.squareup.burst.FieldAndMethodTest[Snack.CHIPS])",
+        "START testMethod[Soda.PEPSI](com.squareup.burst.FieldAndMethodTest[Snack.NUTS])",
+        "FINISH testMethod[Soda.PEPSI](com.squareup.burst.FieldAndMethodTest[Snack.NUTS])",
+        "START testMethod[Soda.COKE](com.squareup.burst.FieldAndMethodTest[Snack.NUTS])",
+        "FINISH testMethod[Soda.COKE](com.squareup.burst.FieldAndMethodTest[Snack.NUTS])",
+        "START testMethod[Soda.RC_COLA](com.squareup.burst.FieldAndMethodTest[Snack.NUTS])",
+        "FINISH testMethod[Soda.RC_COLA](com.squareup.burst.FieldAndMethodTest[Snack.NUTS])",
+        "START testMethod[Soda.PEPSI](com.squareup.burst.FieldAndMethodTest[Snack.CANDY])",
+        "FINISH testMethod[Soda.PEPSI](com.squareup.burst.FieldAndMethodTest[Snack.CANDY])",
+        "START testMethod[Soda.COKE](com.squareup.burst.FieldAndMethodTest[Snack.CANDY])",
+        "FINISH testMethod[Soda.COKE](com.squareup.burst.FieldAndMethodTest[Snack.CANDY])",
+        "START testMethod[Soda.RC_COLA](com.squareup.burst.FieldAndMethodTest[Snack.CANDY])",
+        "FINISH testMethod[Soda.RC_COLA](com.squareup.burst.FieldAndMethodTest[Snack.CANDY])");
+  }
 }

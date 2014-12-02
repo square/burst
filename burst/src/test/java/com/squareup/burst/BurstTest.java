@@ -1,6 +1,5 @@
 package com.squareup.burst;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,7 +28,7 @@ public class BurstTest {
   @Rule public final ExpectedException thrown = ExpectedException.none();
 
   @Test public void nonEnumConstructorParameter() {
-    Constructor<?> constructor = Bad.class.getConstructors()[0];
+    TestConstructor constructor = new TestConstructor(Bad.class.getConstructors()[0]);
 
     thrown.expect(IllegalStateException.class);
     thrown.expectMessage(Bad.class.getName()
@@ -39,7 +38,7 @@ public class BurstTest {
   }
 
   @Test public void singleConstructorParameter() {
-    Constructor<?> constructor = One.class.getConstructors()[0];
+    TestConstructor constructor = new TestConstructor(One.class.getConstructors()[0]);
     Object[][] objects = Burst.explodeArguments(constructor);
     assertThat(objects).containsExactly(
         new Object[] { First.APPLE },
@@ -49,7 +48,7 @@ public class BurstTest {
   }
 
   @Test public void multipleConstructorParameters() {
-    Constructor<?> constructor = Three.class.getConstructors()[0];
+    TestConstructor constructor = new TestConstructor(Three.class.getConstructors()[0]);
     Object[][] objects = Burst.explodeArguments(constructor);
     assertThat(objects).containsExactly(
         new Object[] { First.APPLE, Second.DINGO, Third.FRANK },
