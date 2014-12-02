@@ -4,7 +4,6 @@ import android.app.Instrumentation;
 import android.content.Context;
 import android.test.AndroidTestRunner;
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import junit.framework.Test;
@@ -95,7 +94,7 @@ public class BurstAndroid extends AndroidTestRunner {
     while (testEnumerator.hasMoreElements()) {
       Test test = testEnumerator.nextElement();
       if (test instanceof TestCase) {
-        Constructor<?> constructor = findBurstableConstructor(testClass);
+        FieldConstructor constructor = BurstableConstructor.findSingle(testClass);
         Enum<?>[][] constructorArgsList = Burst.explodeArguments(constructor);
 
         TestCase testCase = (TestCase) test;
@@ -125,33 +124,6 @@ public class BurstAndroid extends AndroidTestRunner {
             "Unknown Test type. Not TestCase or TestSuite. " + test.getClass().getName());
       }
     }
-  }
-
-  /**
-   * Locates the Burst-compatible constructor honoring JUnit 3's restriction of needing a no-arg
-   * constructor.
-   */
-  static Constructor<?> findBurstableConstructor(Class<?> cls) {
-    Constructor<?>[] constructors = cls.getConstructors();
-    if (constructors.length > 2) {
-      throw new IllegalStateException("Class "
-          + cls.getName()
-          + " has too many constructors. "
-          + "Should be 0 or 2 (one no-args, one with enum variations).");
-    }
-    if (constructors.length == 1) {
-      Constructor<?> constructor = constructors[0];
-      if (constructor.getParameterTypes().length == 0) {
-        return constructor;
-      }
-    } else if (constructors.length == 2) {
-      for (Constructor<?> constructor : constructors) {
-        if (constructor.getParameterTypes().length != 0) {
-          return constructor;
-        }
-      }
-    }
-    throw new AssertionError("JUnit should have rejected this class: " + cls.getName());
   }
 
   private static String nameWithArguments(String name, Enum<?>[] constructorArgs,
