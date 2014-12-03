@@ -2,12 +2,14 @@ package com.squareup.burst;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
-@SuppressWarnings("UnusedDeclaration") // Reflection on constructors, methods, and their parameters.
+/** Reflection on constructors, methods, and their parameters. */
+@SuppressWarnings("UnusedDeclaration")
 public class BurstTest {
   enum First { APPLE, BEARD, COUCH }
   enum Second { DINGO, EAGLE }
@@ -24,15 +26,16 @@ public class BurstTest {
     public Bad(Object o) {}
   }
 
+  @Rule public final ExpectedException thrown = ExpectedException.none();
+
   @Test public void nonEnumConstructorParameter() {
     Constructor<?> constructor = Bad.class.getConstructors()[0];
-    try {
-      Burst.explodeArguments(constructor);
-      fail();
-    } catch (IllegalStateException e) {
-      assertThat(e).hasMessage(Bad.class.getName()
-          + " constructor parameter #1 type is not an enum. (java.lang.Object)");
-    }
+
+    thrown.expect(IllegalStateException.class);
+    thrown.expectMessage(Bad.class.getName()
+        + " constructor parameter #1 type is not an enum. (java.lang.Object)");
+
+    Burst.explodeArguments(constructor);
   }
 
   @Test public void singleConstructorParameter() {
@@ -92,13 +95,11 @@ public class BurstTest {
     }
     Method method = Example.class.getMethod("example", Object.class);
 
-    try {
-      Burst.explodeArguments(method);
-      fail();
-    } catch (IllegalStateException e) {
-      assertThat(e).hasMessage(Example.class.getName()
-          + ".example method parameter #1 type is not an enum. (java.lang.Object)");
-    }
+    thrown.expect(IllegalStateException.class);
+    thrown.expectMessage(Example.class.getName()
+        + ".example method parameter #1 type is not an enum. (java.lang.Object)");
+
+    Burst.explodeArguments(method);
   }
 
   @Test public void singleMethodParameters() throws NoSuchMethodException {
