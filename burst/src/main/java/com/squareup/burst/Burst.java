@@ -1,6 +1,5 @@
 package com.squareup.burst;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import static com.squareup.burst.Util.checkNotNull;
@@ -16,10 +15,10 @@ public final class Burst {
    * Explode a list of argument values for invoking the specified constructor with all combinations
    * of its parameters.
    */
-  public static Enum<?>[][] explodeArguments(Constructor<?> constructor) {
+  public static Enum<?>[][] explodeArguments(TestConstructor constructor) {
     checkNotNull(constructor, "constructor");
 
-    return explodeParameters(constructor.getParameterTypes(),
+    return explodeParameters(constructor.getVariationTypes(),
         constructor.getName() + " constructor");
   }
 

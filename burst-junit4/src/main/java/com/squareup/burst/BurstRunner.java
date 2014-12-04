@@ -1,7 +1,6 @@
 package com.squareup.burst;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.runner.Description;
@@ -18,11 +17,11 @@ import static com.squareup.burst.Util.checkNotNull;
  * A set of tests associated with a particular variation of some test class.
  */
 final class BurstRunner extends BlockJUnit4ClassRunner {
-  private final Constructor<?> constructor;
+  private final TestConstructor constructor;
   private final Enum<?>[] constructorArgs;
   private final List<FrameworkMethod> methods;
 
-  BurstRunner(Class<?> cls, Constructor<?> constructor, Enum<?>[] constructorArgs,
+  BurstRunner(Class<?> cls, TestConstructor constructor, Enum<?>[] constructorArgs,
       List<FrameworkMethod> methods) throws InitializationError {
     super(checkNotNull(cls, "cls"));
     this.constructor = checkNotNull(constructor, "constructor");

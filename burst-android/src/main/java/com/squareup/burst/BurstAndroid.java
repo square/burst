@@ -4,7 +4,6 @@ import android.app.Instrumentation;
 import android.content.Context;
 import android.test.AndroidTestRunner;
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import junit.framework.Test;
@@ -95,7 +94,7 @@ public class BurstAndroid extends AndroidTestRunner {
     while (testEnumerator.hasMoreElements()) {
       Test test = testEnumerator.nextElement();
       if (test instanceof TestCase) {
-        Constructor<?> constructor = BurstableConstructor.findSingle(testClass);
+        TestConstructor constructor = BurstableConstructor.findSingle(testClass);
         Enum<?>[][] constructorArgsList = Burst.explodeArguments(constructor);
 
         TestCase testCase = (TestCase) test;
@@ -113,7 +112,7 @@ public class BurstAndroid extends AndroidTestRunner {
             // The override will return the original method name while runTest is executing.
             File dexCache = targetContext.getDir("dx", Context.MODE_PRIVATE);
             TestCase instrumentedTestCase = TestInstrumenter.instrumentTestCase(testClass,
-                constructor.getParameterTypes(), constructorArgs, name, dexCache);
+                constructor.getVariationTypes(), constructorArgs, name, dexCache);
             instrumentedTestCase.setName(method.getName());
             exploded.addTest(instrumentedTestCase);
           }
