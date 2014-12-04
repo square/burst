@@ -19,7 +19,7 @@ public class ConstructorAndMethodTest extends TestCase {
   }
 
   public void testSingleParameterConstructorAndSingleParameterMethod(Drink drink2) {
-    // TODO this currently is not supported!
+    // TODO method parameters are currently not supported in Android tests!
     assertNotNull(drink1);
     assertNotNull(drink2);
   }

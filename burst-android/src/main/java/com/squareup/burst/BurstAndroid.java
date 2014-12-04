@@ -112,7 +112,7 @@ public class BurstAndroid extends AndroidTestRunner {
             // The override will return the original method name while runTest is executing.
             File dexCache = targetContext.getDir("dx", Context.MODE_PRIVATE);
             TestCase instrumentedTestCase = TestInstrumenter.instrumentTestCase(testClass,
-                constructor.getVariationTypes(), constructorArgs, name, dexCache);
+                constructor, constructorArgs, name, dexCache);
             instrumentedTestCase.setName(method.getName());
             exploded.addTest(instrumentedTestCase);
           }
