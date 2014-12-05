@@ -27,6 +27,10 @@ final class TestConstructor {
     return constructor.getName();
   }
 
+  public Class<?>[] getConstructorParameterTypes() {
+    return constructor.getParameterTypes();
+  }
+
   /**
    * Returns an array of the Class objects associated with the fields this constructor was
    * initialized with, followed by the parameter types of this constructor.
@@ -55,22 +59,50 @@ final class TestConstructor {
    */
   public Object newInstance(Object[] args)
       throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    if (args.length != getVariationTypes().length) {
+      throw new IllegalArgumentException(String.format(
+          "Constructor takes %d values, only %d passed", getVariationTypes().length, args.length));
+    }
+
     // Partition arg list
-    final int ctorArgCount = constructor.getParameterTypes().length;
-    final Object[] ctorArgs = Arrays.copyOfRange(args, 0, ctorArgCount);
-    final Object[] fieldArgs = Arrays.copyOfRange(args, ctorArgCount, args.length);
+    final Object[] ctorArgs = extractConstructorArgs(args);
+    final Object[] fieldArgs = extractFieldArgs(args);
 
-    return newInstance(ctorArgs, fieldArgs);
-  }
-
-  private Object newInstance(Object[] ctorArgs, Object[] fieldArgs)
-      throws IllegalAccessException, InvocationTargetException, InstantiationException {
-    final Object instance = constructor.newInstance(ctorArgs);
+    final Object instance = newInstanceWithoutFields(ctorArgs);
     initializeFieldsOnInstance(instance, fieldArgs);
     return instance;
   }
 
-  private void initializeFieldsOnInstance(final Object instance, final Object[] args)
+  /**
+   * @return array containing the elements of <code>args</code> that apply to the underlying
+   * constructor.
+   */
+  public Object[] extractConstructorArgs(final Object[] args) {
+    return Arrays.copyOfRange(args, 0, constructor.getParameterTypes().length);
+  }
+
+  /**
+   * @return array containing the elements of <code>args</code> that apply to fields.
+   */
+  public Object[] extractFieldArgs(final Object[] args) {
+    return Arrays.copyOfRange(args, constructor.getParameterTypes().length, args.length);
+  }
+
+  /**
+   * Creates a new instance by calling the underlying constructor, without initializing
+   * any fields.
+   */
+  public Object newInstanceWithoutFields(Object[] args)
+      throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    return constructor.newInstance(args);
+  }
+
+  /**
+   * Sets the fields on an instance (as passed to
+   * {@link TestConstructor#TestConstructor(Constructor, Field...)}) to <code>args</code>.
+   * The number of arguments in the array must be equal to the number of fields.
+   */
+  public void initializeFieldsOnInstance(final Object instance, final Object[] args)
       throws IllegalAccessException {
     if (fields.length != args.length) {
       throw new IllegalArgumentException(String.format(

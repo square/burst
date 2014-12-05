@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 
 public class MethodTest extends TestCase {
   public void testSingleParameter(Drink drink) {
-    // TODO this currently is not supported!
+    // TODO method parameters are currently not supported in Android tests!
     assertNotNull(drink);
   }
 }

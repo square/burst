@@ -18,14 +18,14 @@ final class TestInstrumenter {
    * will be displayed.
    *
    * @param testClass the class of the test to instrument
-   * @param constructorArgTypes the parameter types of the test class's burstable constructor
+   * @param constructor the field-aware burstable constructor
    * @param constructorArgValues the arguments to be passed to the burstable constructor
    * @param name a descriptive name for the test, used for presentation
    * @param dexCache a location where dex files can be written
    * @return the instrumented test case
    */
   public static TestCase instrumentTestCase(final Class<?> testClass,
-      Class<?>[] constructorArgTypes, Object[] constructorArgValues, final String name,
+      TestConstructor constructor, Object[] constructorArgValues, final String name,
       File dexCache) {
     InvocationHandler handler = new InvocationHandler() {
       final AtomicBoolean inRunTest = new AtomicBoolean();
@@ -53,13 +53,18 @@ final class TestInstrumenter {
     };
 
     try {
-      return (TestCase) ProxyBuilder.forClass(testClass)
+      final TestCase testCase = (TestCase) ProxyBuilder.forClass(testClass)
           .handler(handler)
           .dexCache(dexCache)
-          .constructorArgTypes(constructorArgTypes)
-          .constructorArgValues(constructorArgValues)
+          .constructorArgTypes(constructor.getConstructorParameterTypes())
+          .constructorArgValues(constructor.extractConstructorArgs(constructorArgValues))
           .build();
-    } catch (IOException e) {
+
+      constructor.initializeFieldsOnInstance(testCase,
+          constructor.extractFieldArgs(constructorArgValues));
+
+      return testCase;
+    } catch (IOException | IllegalAccessException e) {
       throw new RuntimeException("Instrumentation failed.", e);
     }
   }
