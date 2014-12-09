@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 1.0.2 *(2014-12-09)*
+----------------------------
+
+ * Added support for field injection with the `@Burst` field annotation.
+
+
 Version 1.0.1 *(2014-10-21)*
 ----------------------------
 
