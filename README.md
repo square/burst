@@ -65,6 +65,19 @@ public DrinkSodaTest(Soda soda, Sets sets) {
 This will be called with the constructor arguments
 [`PEPSI` & `HASH_SET`, `PEPSI` & `LINKED_HASH_SET`, `PEPSI` & `TREE_SET`, `COKE` & `HASH_SET`, ..].
 
+If your constructor is just setting fields, you can just annotate the fields with `@Burst`.
+```java
+@RunWith(BurstJUnit4.class)
+public class DrinkSodaTest {
+  @Burst Soda soda;
+  @Burst Sets sets;
+  // TODO Tests...
+}
+```
+This behaves just like the above example.
+
+**Note:** Classes can either have constructors with arguments *or* annotated fields. A class with both will cause the test runner to throw an exception.
+
 Methods may also be varied using one or more parameters that are enums.
 ```java
 @Test public void drinkFavoriteSodas(Soda soda) {
@@ -72,7 +85,7 @@ Methods may also be varied using one or more parameters that are enums.
 }
 ```
 
-Having both constructor variation and method variation is supported.
+Having both constructor (or field) variation and method variation is supported.
 ```java
 @RunWith(BurstJUnit4.class)
 public class DrinkSodaTest {
@@ -123,6 +136,14 @@ public DrinkSodaTest() {
 
 public DrinkSodaTest(Soda soda) {
   // TODO Do something with 'soda'...
+}
+```
+
+Field annotation also requires a no-argument constructor.
+```java
+@Burst Soda soda;
+
+public DrinkSodaTest() {
 }
 ```
 
@@ -184,5 +205,5 @@ License
 
 
 
- [1]: http://junit-team.github.io/junit/javadoc/4.10/org/junit/Assume.html
- [2]: http://junit-team.github.io/junit/javadoc/4.10/org/junit/Rule.html
+ [1]: http://junit.org/javadoc/latest/org/junit/Assume.html
+ [2]: http://junit.org/javadoc/latest/org/junit/Rule.html
