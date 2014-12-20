@@ -1,9 +1,5 @@
 language: android
 
-jdk:
- - oraclejdk7
- - oraclejdk8
-
 android:
   components:
     - build-tools-20.0.0
@@ -12,11 +8,23 @@ android:
   licenses:
     - android-sdk-license-5be876d5
 
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+
 before_script:
   - echo no | android create avd --force -n test -t android-17 --abi armeabi-v7a
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
+
+after_success:
+  - .buildscript/deploy_snapshot.sh
+
+env:
+  global:
+    - secure: "I3+AlmRguLTShB7E411tgW0/u2oMWTdNO9Re27KjRanHERLDWRDsjOHHaKoK2MZ5Mv6k8KogfRzgongChJXNyVCoKoFj4kowMzzQypEL/bXNj7YNXmDbFUpDSaxlBPnbCAL03ZoHbH1r60ZZQY+w/p8HHLFfwQSRHiuxW2iZCjY="
+    - secure: "EBmDKP8/wGPfP6NTb8P3WOfLeFwTpJwQsajTkKTpeVtEvRr6cpKe1W85nQgdiWed5j7Tw6br7E937uYZP9s54TFakq8uMw9OQrHzboN+fYc41sDQoxobZLypHFt3kxoyWkOKu18P5timvMXUdXge2/A0CTj4ZKG6z1N6vhY8MM0="
 
 branches:
   except:
@@ -24,3 +32,9 @@ branches:
 
 notifications:
   email: false
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.m2
