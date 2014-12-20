@@ -183,6 +183,8 @@ Download
     com.squareup.burst:burst:1.0.2
     ```
 
+Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
+
 
 
 License
@@ -207,3 +209,4 @@ License
 
  [1]: http://junit.org/javadoc/latest/org/junit/Assume.html
  [2]: http://junit.org/javadoc/latest/org/junit/Rule.html
+ [snap]: https://oss.sonatype.org/content/repositories/snapshots/
