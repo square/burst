@@ -111,48 +111,6 @@ runs twice for each `Soda`.
 If a particular variation or variation combination does not make sense you can use [assumptions][1]
 to filter either directly in the test or as a custom [rule][2].
 
-### Android
-
-Android currently uses a JUnit 3-based system for testing. Enums are still used for variation but
-other aspects need to be changed for support.
-
-In a subclass of `InstrumentationTestRunner`, an instance of `BurstAndroid` should be provided
-as the Android test runner.
-```java
-public final class ExampleTestRunner extends InstrumentationTestRunner {
-  private final BurstAndroid testRunner = new BurstAndroid();
-
-  @Override protected AndroidTestRunner getAndroidTestRunner() {
-    return testRunner;
-  }
-}
-```
-
-Due to how test classes are instantiated, constructor variation is only supported if a no-argument
-public constructor is also specified.
-```java
-public DrinkSodaTest() {
-}
-
-public DrinkSodaTest(Soda soda) {
-  // TODO Do something with 'soda'...
-}
-```
-
-Field annotation also requires a no-argument constructor.
-```java
-@Burst Soda soda;
-
-public DrinkSodaTest() {
-}
-```
-
-Method variation is not supported.
-
-An alternate filtering mechanism is provided since JUnit 3 lacks [assumptions][1]. Subclasses of
-`BurstAndroid` can override the `isClassApplicable` and `isMethodApplicable` methods to determine
-whether or not to include a test class or test method, respectively.
-
 
 
 Download
@@ -164,14 +122,6 @@ Download
 
     ```
     com.squareup.burst:burst-junit4:1.0.2
-    ```
-
- *  **Android (JUnit 3)**
-
-    A test runner for use by an `InstrumentationTestRunner` or one of its subclasses.
-
-    ```
-    com.squareup.burst:burst-android:1.0.2
     ```
 
  *  **Core library**
