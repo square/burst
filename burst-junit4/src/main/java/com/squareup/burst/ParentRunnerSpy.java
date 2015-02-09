@@ -2,6 +2,8 @@ package com.squareup.burst;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.junit.runners.ParentRunner;
 
@@ -27,7 +29,7 @@ final class ParentRunnerSpy {
   static <T> List<T> getFilteredChildren(ParentRunner<T> parentRunner) {
     try {
       //noinspection unchecked
-      return (List<T>) getFilteredChildrenMethod.invoke(parentRunner);
+      return new ArrayList<>((Collection<T>) getFilteredChildrenMethod.invoke(parentRunner));
     } catch (IllegalAccessException | InvocationTargetException e) {
       throw new RuntimeException("Failed to invoke getFilteredChildren()", e);
     }
