@@ -41,8 +41,10 @@ public class BurstableConstructorTest {
     public DefaultAndOne(First first) {}
   }
   @Test public void defaultAndParameterizedConstructor() {
-    TestConstructor ctor = BurstableConstructor.findSingle(DefaultAndOne.class);
-    assertThat(ctor.getVariationTypes()).containsExactly(First.class);
+    thrown.expect(IllegalStateException.class);
+    thrown.expectMessage("too many parameterized constructors");
+
+    BurstableConstructor.findSingle(DefaultAndOne.class);
   }
 
   public static class NonPublicConstructor {

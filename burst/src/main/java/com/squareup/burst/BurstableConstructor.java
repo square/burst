@@ -25,11 +25,10 @@ final class BurstableConstructor {
     } else if (constructors.length == 1) {
       return constructors[0];
     } else {
-      return singleParameterizedConstructorOrThrow(constructors,
-          "Class "
-              + cls.getName()
-              + " has too many parameterized constructors. "
-              + "Should only be 1 (with enum variations).");
+      throw new IllegalStateException("Class "
+          + cls.getName()
+          + " has too many parameterized constructors. "
+          + "Should only be 1 (with enum variations).");
     }
   }
 
@@ -56,34 +55,6 @@ final class BurstableConstructor {
     }
 
     return filteredConstructors.toArray(new TestConstructor[filteredConstructors.size()]);
-  }
-
-  /**
-   * Finds the constructor that has parameters.
-   * Assumes at least one non-default constructor is present.
-   * E.g. Given [Ctor(), Ctor(Object)], returns Ctor(Object).
-   *
-   * @throws IllegalStateException if more than one constructor has parameters
-   */
-  private static TestConstructor singleParameterizedConstructorOrThrow(
-      final TestConstructor[] constructors, final String message) {
-    TestConstructor parameterizedConstructor = null;
-
-    for (TestConstructor constructor : constructors) {
-      if (constructor.getVariationTypes().length > 0) {
-        if (null == parameterizedConstructor) {
-          parameterizedConstructor = constructor;
-        } else {
-          throw new IllegalStateException(message);
-        }
-      }
-    }
-
-    if (null == parameterizedConstructor) {
-      throw new IllegalArgumentException("Must pass at least one parameterized constructor");
-    }
-
-    return parameterizedConstructor;
   }
 
   /**
