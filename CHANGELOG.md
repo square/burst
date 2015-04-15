@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 1.1.0 *(2015-04-15)*
+----------------------------
+
+ * New: Support for JUnit 4.12.
+ * JUnit 3 support has been dropped. If you are on Android, use the new 'testing-support-lib' for JUnit 4 on-device tests. This also moves to forbidding default constructors in addition to a burst-enabled constructor.
+
+
 Version 1.0.2 *(2014-12-09)*
 ----------------------------
 

@@ -121,7 +121,7 @@ Download
     A test runner which can be used for JUnit 4.
 
     ```
-    com.squareup.burst:burst-junit4:1.0.2
+    com.squareup.burst:burst-junit4:1.1.0
     ```
 
  *  **Core library**
@@ -130,7 +130,7 @@ Download
     method. Usually not useful on its own.
 
     ```
-    com.squareup.burst:burst:1.0.2
+    com.squareup.burst:burst:1.1.0
     ```
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
