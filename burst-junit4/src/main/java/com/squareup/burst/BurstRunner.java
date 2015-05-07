@@ -2,13 +2,16 @@ package com.squareup.burst;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
+import org.junit.runners.model.Statement;
 
 import static com.squareup.burst.BurstJUnit4.nameWithArguments;
 import static com.squareup.burst.Util.checkNotNull;
@@ -43,6 +46,24 @@ final class BurstRunner extends BlockJUnit4ClassRunner {
 
   @Override protected Object createTest() throws Exception {
     return constructor.newInstance(constructorArgs);
+  }
+
+  @Override protected Statement withBeforeClasses(Statement statement) {
+    // The parent runner, BurstJUnit4, will handle @BeforeClass/@AfterClass/@ClassRule once for the
+    // whole class. We don't want to repeat them for each variation.
+    return statement;
+  }
+
+  @Override protected Statement withAfterClasses(Statement statement) {
+    // The parent runner, BurstJUnit4, will handle @BeforeClass/@AfterClass/@ClassRule once for the
+    // whole class. We don't want to repeat them for each variation.
+    return statement;
+  }
+
+  @Override protected List<TestRule> classRules() {
+    // The parent runner, BurstJUnit4, will handle @BeforeClass/@AfterClass/@ClassRule once for the
+    // whole class. We don't want to repeat them for each variation.
+    return Collections.emptyList();
   }
 
   @Override protected void validateConstructor(List<Throwable> errors) {
