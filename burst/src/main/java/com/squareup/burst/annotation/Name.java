@@ -38,5 +38,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 public @interface Name {
-  String value();
+  String EMPTY = "";
+
+  String value() default EMPTY;
 }
