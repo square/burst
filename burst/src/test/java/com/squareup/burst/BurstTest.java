@@ -153,17 +153,17 @@ public class BurstTest {
   }
 
   @Test public void noArguments() {
-    String actual = Burst.friendlyName(new Enum<?>[0], new Annotation[0][0]);
+    String actual = Burst.friendlyName(new Enum<?>[0]);
     assertThat(actual).isEqualTo("");
   }
 
   @Test public void singleArgument() {
-    String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE }, new Annotation[0][0]);
+    String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE });
     assertThat(actual).isEqualTo("First.APPLE");
   }
 
   @Test public void multipleArguments() {
-    String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE, Second.EAGLE, Third.ITALY }, new Annotation[0][0]);
+    String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE, Second.EAGLE, Third.ITALY });
     assertThat(actual).isEqualTo("First.APPLE, Second.EAGLE, Third.ITALY");
   }
 

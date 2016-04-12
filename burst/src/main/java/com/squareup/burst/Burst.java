@@ -48,6 +48,25 @@ public final class Burst {
    * @throws ClassCastException If any element of {@code constructorArgs} or {@code methodArgs} is
    * not an enum value.
    */
+  public static String friendlyName(Enum<?>[] arguments) {
+    return friendlyName(arguments, null);
+  }
+
+  /**
+   * Creates an "exploded" test name which includes information about the {@code constructorArgs}
+   * and {@code methodArgs}. This will append both the enum class and enum value name for every
+   * argument in order.
+   * <p>
+   * For example, a method named "snackBreak" being invoked with constructor arguments
+   * {@code Drink.SODA} and {@code Snack.ALMONDS} and method arguments {@code BreakTime.AFTERNOON}
+   * would produce "snackBreak_DrinkSODA_SnackALMONDS_BreakTimeAFTERNOON".
+   * <p>
+   * If any of the arguments have an {@literal @}Name annotation, the enum class name will be
+   * replaced with the value provided in the annotation.
+   *
+   * @throws ClassCastException If any element of {@code constructorArgs} or {@code methodArgs} is
+   * not an enum value.
+   */
   public static String friendlyName(Enum<?>[] arguments, Annotation[][] argumentAnnotations) {
     checkNotNull(arguments, "arguments");
     if (arguments.length == 0) {
