@@ -1,6 +1,8 @@
 package com.squareup.burst;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -151,17 +153,43 @@ public class BurstTest {
   }
 
   @Test public void noArguments() {
-    String actual = Burst.friendlyName(new Enum<?>[0]);
+    String actual = Burst.friendlyName(new Enum<?>[0], new Annotation[0][0]);
     assertThat(actual).isEqualTo("");
   }
 
   @Test public void singleArgument() {
-    String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE });
+    String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE }, new Annotation[0][0]);
     assertThat(actual).isEqualTo("First.APPLE");
   }
 
   @Test public void multipleArguments() {
-    String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE, Second.EAGLE, Third.ITALY });
+    String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE, Second.EAGLE, Third.ITALY }, new Annotation[0][0]);
     assertThat(actual).isEqualTo("First.APPLE, Second.EAGLE, Third.ITALY");
   }
+
+  @Test public void singleArgument_named() {
+    String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE }, new Annotation[][] {
+        {TestUtil.createName("Fruit")}
+    });
+    assertThat(actual).isEqualTo("Fruit.APPLE");
+  }
+
+  @Test public void multipleArguments_named() {
+    String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE, Second.EAGLE, Third.ITALY }, new Annotation[][] {
+        {TestUtil.createName("Fruit")},
+        {TestUtil.createName("Bird")},
+        {TestUtil.createName("Country")}
+    });
+    assertThat(actual).isEqualTo("Fruit.APPLE, Bird.EAGLE, Country.ITALY");
+  }
+
+  @Test public void multipleArguments_multipleAnnotations_named() {
+    String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE, Second.EAGLE, Third.ITALY }, new Annotation[][] {
+        {TestUtil.createFake(), TestUtil.createName("Fruit")},
+        {TestUtil.createFake(), TestUtil.createName("Bird")},
+        {TestUtil.createName("Country"), TestUtil.createFake()}
+    });
+    assertThat(actual).isEqualTo("Fruit.APPLE, Bird.EAGLE, Country.ITALY");
+  }
+
 }

@@ -1,5 +1,8 @@
 package com.squareup.burst;
 
+import com.squareup.burst.annotation.Name;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import static com.squareup.burst.Util.checkNotNull;
@@ -45,21 +48,33 @@ public final class Burst {
    * @throws ClassCastException If any element of {@code constructorArgs} or {@code methodArgs} is
    * not an enum value.
    */
-  public static String friendlyName(Enum<?>[] arguments) {
+  public static String friendlyName(Enum<?>[] arguments, Annotation[][] argumentAnnotations) {
     checkNotNull(arguments, "arguments");
     if (arguments.length == 0) {
       return "";
     }
 
     StringBuilder builder = new StringBuilder();
-    for (Object argument : arguments) {
+    for (int i = 0; i < arguments.length; i++) {
+      Object argument = arguments[i];
       if (builder.length() > 0) {
         builder.append(", ");
       }
 
       Enum<?> value = (Enum<?>) argument;
       // Appends the enum name and value name. (e.g., Card.VISA)
-      builder.append(value.getClass().getSimpleName()).append('.').append(value);
+      String name = value.getClass().getSimpleName();
+      if (argumentAnnotations != null
+          && argumentAnnotations.length > i
+          && argumentAnnotations[i] != null) {
+        for (Annotation annotation : argumentAnnotations[i]) {
+          if (annotation instanceof Name) {
+            name = ((Name) annotation).value();
+            break;
+          }
+        }
+      }
+      builder.append(name).append('.').append(value);
     }
     return builder.toString();
   }

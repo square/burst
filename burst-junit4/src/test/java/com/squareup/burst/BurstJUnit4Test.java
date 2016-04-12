@@ -28,6 +28,18 @@ public final class BurstJUnit4Test {
         "FINISH testMethod(com.squareup.burst.ConstructorSingleArgumentTest[Soda.RC_COLA])");
   }
 
+  @Test public void constructorSingleNamed() throws InitializationError {
+    BurstJUnit4 runner = new BurstJUnit4(ConstructorSingleNamedArgumentTest.class);
+    runner.run(listener.notifier());
+    assertThat(listener.journal()).containsExactly(
+        "START testMethod(com.squareup.burst.ConstructorSingleNamedArgumentTest[Drink.PEPSI])",
+        "FINISH testMethod(com.squareup.burst.ConstructorSingleNamedArgumentTest[Drink.PEPSI])",
+        "START testMethod(com.squareup.burst.ConstructorSingleNamedArgumentTest[Drink.COKE])",
+        "FINISH testMethod(com.squareup.burst.ConstructorSingleNamedArgumentTest[Drink.COKE])",
+        "START testMethod(com.squareup.burst.ConstructorSingleNamedArgumentTest[Drink.RC_COLA])",
+        "FINISH testMethod(com.squareup.burst.ConstructorSingleNamedArgumentTest[Drink.RC_COLA])");
+  }
+
   @Test public void constructorMultiple() throws InitializationError {
     BurstJUnit4 runner = new BurstJUnit4(ConstructorMultipleArgumentTest.class);
     runner.run(listener.notifier());
@@ -50,6 +62,30 @@ public final class BurstJUnit4Test {
         "FINISH testMethod(com.squareup.burst.ConstructorMultipleArgumentTest[Soda.RC_COLA, Snack.NUTS])",
         "START testMethod(com.squareup.burst.ConstructorMultipleArgumentTest[Soda.RC_COLA, Snack.CANDY])",
         "FINISH testMethod(com.squareup.burst.ConstructorMultipleArgumentTest[Soda.RC_COLA, Snack.CANDY])");
+  }
+
+  @Test public void constructorMultipleNames() throws InitializationError {
+    BurstJUnit4 runner = new BurstJUnit4(ConstructorMultipleNamedArgumentTest.class);
+    runner.run(listener.notifier());
+    assertThat(listener.journal()).containsExactly(
+        "START testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.PEPSI, Snack.CHIPS])",
+        "FINISH testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.PEPSI, Snack.CHIPS])",
+        "START testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.PEPSI, Snack.NUTS])",
+        "FINISH testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.PEPSI, Snack.NUTS])",
+        "START testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.PEPSI, Snack.CANDY])",
+        "FINISH testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.PEPSI, Snack.CANDY])",
+        "START testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.COKE, Snack.CHIPS])",
+        "FINISH testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.COKE, Snack.CHIPS])",
+        "START testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.COKE, Snack.NUTS])",
+        "FINISH testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.COKE, Snack.NUTS])",
+        "START testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.COKE, Snack.CANDY])",
+        "FINISH testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.COKE, Snack.CANDY])",
+        "START testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.RC_COLA, Snack.CHIPS])",
+        "FINISH testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.RC_COLA, Snack.CHIPS])",
+        "START testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.RC_COLA, Snack.NUTS])",
+        "FINISH testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.RC_COLA, Snack.NUTS])",
+        "START testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.RC_COLA, Snack.CANDY])",
+        "FINISH testMethod(com.squareup.burst.ConstructorMultipleNamedArgumentTest[Drink.RC_COLA, Snack.CANDY])");
   }
 
   @Test public void method() throws InitializationError {
@@ -82,6 +118,38 @@ public final class BurstJUnit4Test {
         "FINISH multiple[Soda.RC_COLA, Snack.NUTS](com.squareup.burst.MethodTest)",
         "START multiple[Soda.RC_COLA, Snack.CANDY](com.squareup.burst.MethodTest)",
         "FINISH multiple[Soda.RC_COLA, Snack.CANDY](com.squareup.burst.MethodTest)");
+  }
+
+  @Test public void namedMethod() throws InitializationError {
+    BurstJUnit4 runner = new BurstJUnit4(NamedMethodTest.class);
+    runner.run(listener.notifier());
+    assertThat(listener.journal()).containsExactly(
+        "START single[Drink.PEPSI](com.squareup.burst.NamedMethodTest)",
+        "FINISH single[Drink.PEPSI](com.squareup.burst.NamedMethodTest)",
+        "START single[Drink.COKE](com.squareup.burst.NamedMethodTest)",
+        "FINISH single[Drink.COKE](com.squareup.burst.NamedMethodTest)",
+        "START single[Drink.RC_COLA](com.squareup.burst.NamedMethodTest)",
+        "FINISH single[Drink.RC_COLA](com.squareup.burst.NamedMethodTest)",
+        "START none(com.squareup.burst.NamedMethodTest)",
+        "FINISH none(com.squareup.burst.NamedMethodTest)",
+        "START multiple[Drink.PEPSI, Snack.CHIPS](com.squareup.burst.NamedMethodTest)",
+        "FINISH multiple[Drink.PEPSI, Snack.CHIPS](com.squareup.burst.NamedMethodTest)",
+        "START multiple[Drink.PEPSI, Snack.NUTS](com.squareup.burst.NamedMethodTest)",
+        "FINISH multiple[Drink.PEPSI, Snack.NUTS](com.squareup.burst.NamedMethodTest)",
+        "START multiple[Drink.PEPSI, Snack.CANDY](com.squareup.burst.NamedMethodTest)",
+        "FINISH multiple[Drink.PEPSI, Snack.CANDY](com.squareup.burst.NamedMethodTest)",
+        "START multiple[Drink.COKE, Snack.CHIPS](com.squareup.burst.NamedMethodTest)",
+        "FINISH multiple[Drink.COKE, Snack.CHIPS](com.squareup.burst.NamedMethodTest)",
+        "START multiple[Drink.COKE, Snack.NUTS](com.squareup.burst.NamedMethodTest)",
+        "FINISH multiple[Drink.COKE, Snack.NUTS](com.squareup.burst.NamedMethodTest)",
+        "START multiple[Drink.COKE, Snack.CANDY](com.squareup.burst.NamedMethodTest)",
+        "FINISH multiple[Drink.COKE, Snack.CANDY](com.squareup.burst.NamedMethodTest)",
+        "START multiple[Drink.RC_COLA, Snack.CHIPS](com.squareup.burst.NamedMethodTest)",
+        "FINISH multiple[Drink.RC_COLA, Snack.CHIPS](com.squareup.burst.NamedMethodTest)",
+        "START multiple[Drink.RC_COLA, Snack.NUTS](com.squareup.burst.NamedMethodTest)",
+        "FINISH multiple[Drink.RC_COLA, Snack.NUTS](com.squareup.burst.NamedMethodTest)",
+        "START multiple[Drink.RC_COLA, Snack.CANDY](com.squareup.burst.NamedMethodTest)",
+        "FINISH multiple[Drink.RC_COLA, Snack.CANDY](com.squareup.burst.NamedMethodTest)");
   }
 
   @Test public void constructorAndMethod() throws InitializationError {
@@ -150,6 +218,30 @@ public final class BurstJUnit4Test {
         "FINISH testMethod(com.squareup.burst.MultipleFieldsTest[Soda.RC_COLA, Snack.CANDY])");
   }
 
+  @Test public void multipleNamedFields() throws InitializationError {
+    BurstJUnit4 runner = new BurstJUnit4(MultipleNamedFieldsTest.class);
+    runner.run(listener.notifier());
+    assertThat(listener.journal()).containsExactly(
+        "START testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.PEPSI, Snack.CHIPS])",
+        "FINISH testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.PEPSI, Snack.CHIPS])",
+        "START testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.PEPSI, Snack.NUTS])",
+        "FINISH testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.PEPSI, Snack.NUTS])",
+        "START testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.PEPSI, Snack.CANDY])",
+        "FINISH testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.PEPSI, Snack.CANDY])",
+        "START testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.COKE, Snack.CHIPS])",
+        "FINISH testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.COKE, Snack.CHIPS])",
+        "START testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.COKE, Snack.NUTS])",
+        "FINISH testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.COKE, Snack.NUTS])",
+        "START testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.COKE, Snack.CANDY])",
+        "FINISH testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.COKE, Snack.CANDY])",
+        "START testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.RC_COLA, Snack.CHIPS])",
+        "FINISH testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.RC_COLA, Snack.CHIPS])",
+        "START testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.RC_COLA, Snack.NUTS])",
+        "FINISH testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.RC_COLA, Snack.NUTS])",
+        "START testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.RC_COLA, Snack.CANDY])",
+        "FINISH testMethod(com.squareup.burst.MultipleNamedFieldsTest[Drink.RC_COLA, Snack.CANDY])");
+  }
+
   @Test public void fieldAndMethod() throws InitializationError {
     BurstJUnit4 runner = new BurstJUnit4(FieldAndMethodTest.class);
     runner.run(listener.notifier());
@@ -172,5 +264,29 @@ public final class BurstJUnit4Test {
         "FINISH testMethod[Soda.COKE](com.squareup.burst.FieldAndMethodTest[Snack.CANDY])",
         "START testMethod[Soda.RC_COLA](com.squareup.burst.FieldAndMethodTest[Snack.CANDY])",
         "FINISH testMethod[Soda.RC_COLA](com.squareup.burst.FieldAndMethodTest[Snack.CANDY])");
+  }
+
+  @Test public void namedFieldAndNamedMethod() throws InitializationError {
+    BurstJUnit4 runner = new BurstJUnit4(NamedFieldAndNamedMethodTest.class);
+    runner.run(listener.notifier());
+    assertThat(listener.journal()).containsExactly(
+        "START testMethod[Drink.PEPSI](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.CHIPS])",
+        "FINISH testMethod[Drink.PEPSI](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.CHIPS])",
+        "START testMethod[Drink.COKE](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.CHIPS])",
+        "FINISH testMethod[Drink.COKE](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.CHIPS])",
+        "START testMethod[Drink.RC_COLA](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.CHIPS])",
+        "FINISH testMethod[Drink.RC_COLA](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.CHIPS])",
+        "START testMethod[Drink.PEPSI](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.NUTS])",
+        "FINISH testMethod[Drink.PEPSI](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.NUTS])",
+        "START testMethod[Drink.COKE](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.NUTS])",
+        "FINISH testMethod[Drink.COKE](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.NUTS])",
+        "START testMethod[Drink.RC_COLA](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.NUTS])",
+        "FINISH testMethod[Drink.RC_COLA](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.NUTS])",
+        "START testMethod[Drink.PEPSI](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.CANDY])",
+        "FINISH testMethod[Drink.PEPSI](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.CANDY])",
+        "START testMethod[Drink.COKE](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.CANDY])",
+        "FINISH testMethod[Drink.COKE](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.CANDY])",
+        "START testMethod[Drink.RC_COLA](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.CANDY])",
+        "FINISH testMethod[Drink.RC_COLA](com.squareup.burst.NamedFieldAndNamedMethodTest[Food.CANDY])");
   }
 }
