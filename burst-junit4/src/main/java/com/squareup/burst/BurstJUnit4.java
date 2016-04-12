@@ -73,7 +73,8 @@ public final class BurstJUnit4 extends Suite {
     return unmodifiableList(burstRunners);
   }
 
-  static String nameWithArguments(String name, Enum<?>[] arguments, Annotation[][] argumentAnnotations) {
+  static String nameWithArguments(String name, Enum<?>[] arguments,
+                                  Annotation[][] argumentAnnotations) {
     if (arguments.length == 0) {
       return name;
     }
