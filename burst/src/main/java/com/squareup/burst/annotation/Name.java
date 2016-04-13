@@ -38,7 +38,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 public @interface Name {
-  String EMPTY = "";
 
-  String value() default EMPTY;
+  /**
+   * @return The String value that Burst should use for the name in test output.
+   */
+  String value();
 }
