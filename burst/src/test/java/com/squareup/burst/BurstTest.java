@@ -1,11 +1,11 @@
 package com.squareup.burst;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -159,19 +159,19 @@ public class BurstTest {
 
   @Test public void singleArgument() {
     String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE });
-    assertThat(actual).isEqualTo("First.APPLE");
+    assertThat(actual).isEqualTo("APPLE");
   }
 
   @Test public void multipleArguments() {
     String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE, Second.EAGLE, Third.ITALY });
-    assertThat(actual).isEqualTo("First.APPLE, Second.EAGLE, Third.ITALY");
+    assertThat(actual).isEqualTo("APPLE, EAGLE, ITALY");
   }
 
   @Test public void singleArgument_named() {
     String actual = Burst.friendlyName(new Enum<?>[] { First.APPLE }, new Annotation[][] {
         {TestUtil.createName("Fruit")}
     });
-    assertThat(actual).isEqualTo("Fruit.APPLE");
+    assertThat(actual).isEqualTo("Fruit=APPLE");
   }
 
   @Test public void multipleArguments_named() {
@@ -180,7 +180,7 @@ public class BurstTest {
         {TestUtil.createName("Bird")},
         {TestUtil.createName("Country")}
     });
-    assertThat(actual).isEqualTo("Fruit.APPLE, Bird.EAGLE, Country.ITALY");
+    assertThat(actual).isEqualTo("Fruit=APPLE, Bird=EAGLE, Country=ITALY");
   }
 
   @Test public void multipleArguments_multipleAnnotations_named() {
@@ -189,7 +189,7 @@ public class BurstTest {
         {TestUtil.createFake(), TestUtil.createName("Bird")},
         {TestUtil.createName("Country"), TestUtil.createFake()}
     });
-    assertThat(actual).isEqualTo("Fruit.APPLE, Bird.EAGLE, Country.ITALY");
+    assertThat(actual).isEqualTo("Fruit=APPLE, Bird=EAGLE, Country=ITALY");
   }
 
 }

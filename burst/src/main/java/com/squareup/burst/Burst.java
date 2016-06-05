@@ -82,18 +82,18 @@ public final class Burst {
 
       Enum<?> value = (Enum<?>) argument;
       // Appends the enum name and value name. (e.g., Card.VISA)
-      String name = value.getClass().getSimpleName();
       if (argumentAnnotations != null
           && argumentAnnotations.length > i
           && argumentAnnotations[i] != null) {
         for (Annotation annotation : argumentAnnotations[i]) {
           if (annotation instanceof Name) {
-            name = ((Name) annotation).value();
+            String name = ((Name) annotation).value();
+            builder.append(name).append('=');
             break;
           }
         }
       }
-      builder.append(name).append('.').append(value);
+      builder.append(value);
     }
     return builder.toString();
   }
