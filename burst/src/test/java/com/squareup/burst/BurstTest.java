@@ -3,7 +3,6 @@ package com.squareup.burst;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
