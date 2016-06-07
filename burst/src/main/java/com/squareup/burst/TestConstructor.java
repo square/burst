@@ -122,7 +122,10 @@ final class TestConstructor {
     System.arraycopy(ctorAnnotations, 0, allAnnotations, 0, ctorAnnotations.length);
 
     for (int i = 0; i < fields.length; i++) {
-      allAnnotations[i + ctorAnnotations.length] = fields[i].getAnnotations();
+      Annotation[] sourceAnnotations = fields[i].getAnnotations();
+      Annotation[] copiedAnnotations = new Annotation[sourceAnnotations.length];
+      System.arraycopy(sourceAnnotations, 0, copiedAnnotations, 0, sourceAnnotations.length);
+      allAnnotations[i + ctorAnnotations.length] = copiedAnnotations;
     }
 
     return allAnnotations;
