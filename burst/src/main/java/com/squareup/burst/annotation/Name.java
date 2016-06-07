@@ -29,10 +29,10 @@ import java.lang.annotation.Target;
  * </pre>
  * Would produce output like this in the runner:
  * <pre>
- *   testCondition[](com.example.yourpackage.MyTest[IsEnabled.TRUE, IsFlagged.TRUE])
- *   testCondition[](com.example.yourpackage.MyTest[IsEnabled.TRUE, IsFlagged.FALSE])
- *   testCondition[](com.example.yourpackage.MyTest[IsEnabled.FALSE, IsFlagged.TRUE])
- *   testCondition[](com.example.yourpackage.MyTest[IsEnabled.FALSE, IsFlagged.FALSE])
+ *   testCondition[](com.example.yourpackage.MyTest[IsEnabled=TRUE, IsFlagged=TRUE])
+ *   testCondition[](com.example.yourpackage.MyTest[IsEnabled=TRUE, IsFlagged=FALSE])
+ *   testCondition[](com.example.yourpackage.MyTest[IsEnabled=FALSE, IsFlagged=TRUE])
+ *   testCondition[](com.example.yourpackage.MyTest[IsEnabled=FALSE, IsFlagged=FALSE])
  * </pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
