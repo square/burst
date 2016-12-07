@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 1.1.1 *(2016-12-07)*
+----------------------------
+
+ * Fix: Pass method annotations when creating JUnit Descriptions.
+ * Fix: Do not invoke BeforeClass/AfterClass/ClassRule for each variation.
+
+
 Version 1.1.0 *(2015-04-15)*
 ----------------------------
 
