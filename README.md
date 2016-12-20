@@ -2,6 +2,7 @@ Burst
 =====
 
 A unit testing library for varying test data.
+Burst是开源的单元测试类库，用于对不同的数据进行测试。可以在Android和JUnit 4上使用.
 
 
 
