@@ -49,7 +49,7 @@ public final class Burst {
    * not an enum value.
    */
   public static String friendlyName(Enum<?>[] arguments) {
-    return friendlyName(arguments, null);
+    return friendlyName(arguments, new Annotation[0][0]);
   }
 
   /**
@@ -82,9 +82,7 @@ public final class Burst {
 
       Enum<?> value = (Enum<?>) argument;
       // Appends the enum name and value name. (e.g., Card.VISA)
-      if (argumentAnnotations != null
-          && argumentAnnotations.length > i
-          && argumentAnnotations[i] != null) {
+      if (argumentAnnotations.length > i) {
         for (Annotation annotation : argumentAnnotations[i]) {
           if (annotation instanceof Name) {
             String name = ((Name) annotation).value();
