@@ -34,7 +34,7 @@ public enum Sets {
     @Override public <T> Set<T> create() {
       return new TreeSet<T>();
     }
-  }
+  };
 
   public abstract <T> Set<T> create();
 }
