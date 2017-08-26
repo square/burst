@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 1.2.0 *(2017-08-26)*
+----------------------------
+
+ * New: `@Name` annotation allows you to control the enum prefix in the test name. When no name is provided the enum name is no longer used.
+
+
 Version 1.1.1 *(2016-12-07)*
 ----------------------------
 
