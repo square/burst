@@ -1,5 +1,8 @@
 package com.squareup.burst;
 
+import com.squareup.burst.annotation.Name;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import static com.squareup.burst.Util.checkNotNull;
@@ -40,26 +43,55 @@ public final class Burst {
    * <p>
    * For example, a method named "snackBreak" being invoked with constructor arguments
    * {@code Drink.SODA} and {@code Snack.ALMONDS} and method arguments {@code BreakTime.AFTERNOON}
-   * would produce "snackBreak_DrinkSODA_SnackALMONDS_BreakTimeAFTERNOON".
+   * would produce "snackBreak_SODA_ALMONDS_AFTERNOON".
    *
    * @throws ClassCastException If any element of {@code constructorArgs} or {@code methodArgs} is
    * not an enum value.
    */
   public static String friendlyName(Enum<?>[] arguments) {
+    return friendlyName(arguments, new Annotation[0][0]);
+  }
+
+  /**
+   * Creates an "exploded" test name which includes information about the {@code constructorArgs}
+   * and {@code methodArgs}. This will append both the enum class and enum value name for every
+   * argument in order.
+   * <p>
+   * For example, a method named "snackBreak" being invoked with constructor arguments
+   * {@code Drink.SODA} and {@code Snack.ALMONDS} and method arguments {@code BreakTime.AFTERNOON}
+   * would produce "snackBreak_SODA_ALMONDS_AFTERNOON".
+   * <p>
+   * If any of the arguments have an {@literal @}Name annotation, the enum class name will be
+   * replaced with the value provided in the annotation.
+   *
+   * @throws ClassCastException If any element of {@code constructorArgs} or {@code methodArgs} is
+   * not an enum value.
+   */
+  public static String friendlyName(Enum<?>[] arguments, Annotation[][] argumentAnnotations) {
     checkNotNull(arguments, "arguments");
     if (arguments.length == 0) {
       return "";
     }
 
     StringBuilder builder = new StringBuilder();
-    for (Object argument : arguments) {
+    for (int i = 0; i < arguments.length; i++) {
+      Object argument = arguments[i];
       if (builder.length() > 0) {
         builder.append(", ");
       }
 
       Enum<?> value = (Enum<?>) argument;
       // Appends the enum name and value name. (e.g., Card.VISA)
-      builder.append(value.getClass().getSimpleName()).append('.').append(value);
+      if (argumentAnnotations.length > i) {
+        for (Annotation annotation : argumentAnnotations[i]) {
+          if (annotation instanceof Name) {
+            String name = ((Name) annotation).value();
+            builder.append(name).append('=');
+            break;
+          }
+        }
+      }
+      builder.append(value);
     }
     return builder.toString();
   }

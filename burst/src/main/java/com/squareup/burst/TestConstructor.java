@@ -1,5 +1,6 @@
 package com.squareup.burst;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -112,5 +113,18 @@ final class TestConstructor {
     for (int i = 0; i < fields.length; i++) {
       fields[i].set(instance, args[i]);
     }
+  }
+
+  public Annotation[][] getArgumentAnnotations() {
+    final Annotation[][] ctorAnnotations = constructor.getParameterAnnotations();
+    final Annotation[][] allAnnotations = new Annotation[ctorAnnotations.length + fields.length][];
+
+    System.arraycopy(ctorAnnotations, 0, allAnnotations, 0, ctorAnnotations.length);
+
+    for (int i = 0; i < fields.length; i++) {
+      allAnnotations[i + ctorAnnotations.length] = fields[i].getAnnotations();
+    }
+
+    return allAnnotations;
   }
 }

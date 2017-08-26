@@ -1,5 +1,6 @@
 package com.squareup.burst;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,10 +73,11 @@ public final class BurstJUnit4 extends Suite {
     return unmodifiableList(burstRunners);
   }
 
-  static String nameWithArguments(String name, Enum<?>[] arguments) {
+  static String nameWithArguments(String name, Enum<?>[] arguments,
+                                  Annotation[][] argumentAnnotations) {
     if (arguments.length == 0) {
       return name;
     }
-    return name + '[' + Burst.friendlyName(arguments) + ']';
+    return name + '[' + Burst.friendlyName(arguments, argumentAnnotations) + ']';
   }
 }

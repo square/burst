@@ -37,7 +37,8 @@ final class BurstRunner extends BlockJUnit4ClassRunner {
   }
 
   @Override protected String getName() {
-    return nameWithArguments(super.getName(), constructorArgs);
+    return nameWithArguments(super.getName(), constructorArgs,
+        constructor.getArgumentAnnotations());
   }
 
   @Override protected Description describeChild(FrameworkMethod method) {
