@@ -42,7 +42,8 @@ final class BurstRunner extends BlockJUnit4ClassRunner {
   }
 
   @Override protected Description describeChild(FrameworkMethod method) {
-    return Description.createTestDescription(getName(), method.getName(), method.getAnnotations());
+    return Description.createTestDescription(
+        getTestClass().getJavaClass(), getName() + ":" + method.getName(), method.getAnnotations());
   }
 
   @Override protected Object createTest() throws Exception {
