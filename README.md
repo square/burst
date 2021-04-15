@@ -3,6 +3,8 @@ Burst
 
 A unit testing library for varying test data.
 
+**DEPRECATED**: Burst remains stable and functional, but you should check out [TestParameterInjector](https://github.com/google/TestParameterInjector) from Google which is like Burst++. Unless there are major bugs in Burst which necessitate a patch release, no new development will be occurring.
+
 
 
 Usage
